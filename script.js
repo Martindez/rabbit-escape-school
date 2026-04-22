@@ -26,6 +26,7 @@ let maxHearts = 3;
 let gameStarted = false;
 let startTime = 0;
 let isBusy = false;
+let killerMoveTimer = null;
 
 const startScreen = document.getElementById("startScreen");
 const hud = document.getElementById("hud");
@@ -57,17 +58,14 @@ startBtn.addEventListener("click", startGame);
 restartBtn.addEventListener("click", resetGame);
 
 roomButtons.forEach((button) => {
-  button.addEventListener("click", async () => {
+  button.addEventListener("click", () => {
     if (!gameStarted || isBusy) return;
-    await movePlayer(button.dataset.room);
+    movePlayer(button.dataset.room);
   });
 });
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 function startGame() {
+  clearPendingTimer();
   gameStarted = true;
   isBusy = false;
   startTime = Date.now();
@@ -83,6 +81,8 @@ function startGame() {
 }
 
 function resetGame() {
+  clearPendingTimer();
+
   playerRoom = "Playground";
   killerRoom = "Security";
   collectedKeys = [];
@@ -101,62 +101,81 @@ function resetGame() {
   updateUI();
 }
 
-async function movePlayer(targetRoom) {
+function clearPendingTimer() {
+  if (killerMoveTimer) {
+    clearTimeout(killerMoveTimer);
+    killerMoveTimer = null;
+  }
+  addKillerTurnEffect(false);
+}
+
+function movePlayer(targetRoom) {
   if (!rooms[playerRoom].includes(targetRoom)) {
     showMessage("You can only move to connected rooms.");
     return;
   }
 
   isBusy = true;
+  flashSelectedRoom(targetRoom);
 
-  try {
-    flashSelectedRoom(targetRoom);
-    showMessage(`Moving to ${targetRoom}...`);
-    await sleep(140);
+  playerRoom = targetRoom;
+  handleRoomArrival();
+  updateUI();
 
-    playerRoom = targetRoom;
+  if (!gameStarted) {
+    finishTurn();
+    return;
+  }
+
+  if (playerRoom === killerRoom) {
+    playerHit();
     updateUI();
-    await sleep(320);
 
-    handleRoomArrival();
-    updateUI();
-
-    if (!gameStarted) return;
-
-    if (playerRoom === killerRoom) {
-      playerHit();
-      updateUI();
-      if (!gameStarted) return;
-      await sleep(250);
+    if (!gameStarted) {
+      finishTurn();
+      return;
     }
+  }
 
-    if (playerRoom === "Exit" && exitIsOpen()) {
-      winGame();
+  if (playerRoom === "Exit" && exitIsOpen()) {
+    winGame();
+    finishTurn();
+    return;
+  }
+
+  showMessage("The killer is moving...");
+  addKillerTurnEffect(true);
+
+  killerMoveTimer = setTimeout(() => {
+    killerMoveTimer = null;
+
+    if (!gameStarted) {
+      finishTurn();
       return;
     }
 
-    showMessage("The killer is moving...");
-    addKillerTurnEffect(true);
-    await sleep(260);
-
     moveKiller();
-    updateUI();
-    await sleep(320);
     addKillerTurnEffect(false);
+    updateUI();
 
     if (playerRoom === killerRoom) {
       playerHit();
       updateUI();
-      if (!gameStarted) return;
-      await sleep(250);
+
+      if (!gameStarted) {
+        finishTurn();
+        return;
+      }
     }
 
     if (playerRoom === "Exit" && exitIsOpen()) {
       winGame();
+      finishTurn();
       return;
     }
 
     const distance = getDistance(playerRoom, killerRoom);
+
     if (distance === 1) {
       showMessage("Warning: The killer is very close!");
     } else if (exitIsOpen() && playerRoom !== "Exit") {
@@ -166,10 +185,14 @@ async function movePlayer(targetRoom) {
     }
 
     updateUI();
-  } finally {
-    addKillerTurnEffect(false);
-    isBusy = false;
-  }
+    finishTurn();
+  }, 320);
+}
+
+function finishTurn() {
+  isBusy = false;
+  addKillerTurnEffect(false);
+  updateUI();
 }
 
 function handleRoomArrival() {
@@ -257,8 +280,10 @@ function playerHit() {
 }
 
 function loseGame() {
+  clearPendingTimer();
   gameStarted = false;
   isBusy = false;
+
   hud.classList.add("hidden");
   gameWrap.classList.add("hidden");
   messageBox.classList.add("hidden");
@@ -269,8 +294,10 @@ function loseGame() {
 }
 
 function winGame() {
+  clearPendingTimer();
   gameStarted = false;
   isBusy = false;
+
   hud.classList.add("hidden");
   gameWrap.classList.add("hidden");
   messageBox.classList.add("hidden");
