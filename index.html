@@ -15,19 +15,23 @@
 
     <section id="startScreen" class="panel screen">
       <h2>Start Game</h2>
-      <p>You are the white rabbit.</p>
-      <p>The killer is the bloody rabbit.</p>
-      <p>Click connected rooms to move. Collect all keys, then escape through Exit.</p>
+      <p>You are the survivor.</p>
+      <p>The killer is the rabbit monster.</p>
+      <p>Click connected rooms to move.</p>
+      <p>Collect all 4 keys, then go to the Exit.</p>
+      <p>If the killer catches you 3 times, you lose.</p>
       <button id="startBtn" class="main-btn">Start</button>
     </section>
 
     <section id="hud" class="panel hidden">
       <div class="hud-grid">
+        <div><strong>Goal:</strong> <span id="goalText">Find 4 keys</span></div>
         <div><strong>Keys:</strong> <span id="keyCount">0</span>/4</div>
         <div><strong>Hearts:</strong> <span id="hearts">❤️ ❤️ ❤️</span></div>
         <div><strong>Danger:</strong> <span id="dangerText">Low</span></div>
         <div><strong>Player:</strong> <span id="playerRoom">Playground</span></div>
-        <div><strong>Killer:</strong> <span id="killerRoom">Kitchen</span></div>
+        <div><strong>Killer:</strong> <span id="killerRoom">Security</span></div>
+        <div><strong>Exit:</strong> <span id="exitState">Locked</span></div>
         <div><strong>Best Time:</strong> <span id="bestTime">--</span></div>
       </div>
 
@@ -58,7 +62,7 @@
 
     <section id="endScreen" class="panel screen hidden">
       <h2 id="endTitle">Game Over</h2>
-      <p id="endText">The bloody rabbit caught you.</p>
+      <p id="endText">The killer rabbit caught you.</p>
       <button id="restartBtn" class="main-btn">Play Again</button>
     </section>
   </div>
