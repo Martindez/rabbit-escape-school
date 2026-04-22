@@ -67,13 +67,6 @@ body {
   background: #228b4e;
 }
 
-.topbar,
-.panel,
-.map-board,
-.main-btn {
-  -webkit-tap-highlight-color: transparent;
-}
-
 .start-screen {
   padding: 18px;
   background:
@@ -208,8 +201,12 @@ body {
 }
 
 @keyframes dangerPulse {
-  from { filter: brightness(1); }
-  to { filter: brightness(1.3); }
+  from {
+    filter: brightness(1);
+  }
+  to {
+    filter: brightness(1.3);
+  }
 }
 
 .map-board {
@@ -391,13 +388,21 @@ body {
 }
 
 @keyframes heroBounce {
-  from { transform: translate(-50%, -50%) scale(1); }
-  to { transform: translate(-50%, -50%) scale(1.06); }
+  from {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1.06);
+  }
 }
 
 @keyframes killerPulse {
-  from { transform: translate(-50%, -50%) scale(1); }
-  to { transform: translate(-50%, -50%) scale(1.14); }
+  from {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1.14);
+  }
 }
 
 #messageText {
