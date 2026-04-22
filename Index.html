@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rabbit Escape</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="menu-app">
+    <section class="menu-card">
+      <p class="menu-eyebrow">SCHOOL PROJECT</p>
+      <h1 class="menu-title">Rabbit Escape</h1>
+      <p class="menu-tagline">
+        Escape scary places, collect keys, avoid the killer rabbit, and unlock the next level.
+      </p>
+
+      <div class="menu-characters">
+        <div class="menu-character">
+          <img src="assets/player.png" alt="Player" class="menu-character-img hero-preview">
+          <p><strong>Player</strong><br>Main character</p>
+        </div>
+        <div class="menu-character">
+          <img src="assets/killer.png" alt="Killer rabbit" class="menu-character-img killer-preview">
+          <p><strong>Killer Rabbit</strong><br>Main enemy</p>
+        </div>
+      </div>
+
+      <div class="menu-actions">
+        <button id="playBtn" class="menu-btn primary-btn">Play</button>
+        <button id="levelsBtn" class="menu-btn secondary-btn">Levels</button>
+        <button id="creditsBtn" class="menu-btn secondary-btn">Credits</button>
+      </div>
+    </section>
+
+    <section id="levelsPanel" class="info-card hidden">
+      <h2>Levels</h2>
+      <div class="level-list">
+        <button id="level1Btn" class="level-btn unlocked">
+          <span class="level-name">Level 1</span>
+          <span class="level-desc">School Escape</span>
+        </button>
+
+        <button id="level2Btn" class="level-btn locked">
+          <span class="level-name">Level 2</span>
+          <span class="level-desc" id="level2Text">Venezia Pizzeria</span>
+        </button>
+
+        <div class="level-btn locked static-level">
+          <span class="level-name">Level 3</span>
+          <span class="level-desc">Coming Soon</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="creditsPanel" class="info-card hidden">
+      <h2>Credits</h2>
+      <p><strong>Made by Martin and Alan</strong></p>
+      <p>School project</p>
+      <p>Built with HTML, CSS, JavaScript, and GitHub Pages.</p>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
