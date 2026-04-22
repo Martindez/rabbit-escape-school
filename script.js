@@ -33,8 +33,13 @@ const hud = document.getElementById("hud");
 const gameWrap = document.getElementById("gameWrap");
 const messageBox = document.getElementById("messageBox");
 const endScreen = document.getElementById("endScreen");
+const endEyebrow = document.getElementById("endEyebrow");
 const endTitle = document.getElementById("endTitle");
 const endText = document.getElementById("endText");
+const endTime = document.getElementById("endTime");
+const endHearts = document.getElementById("endHearts");
+const endKeys = document.getElementById("endKeys");
+const endBestTime = document.getElementById("endBestTime");
 
 const goalText = document.getElementById("goalText");
 const exitStateText = document.getElementById("exitState");
@@ -289,8 +294,15 @@ function loseGame() {
   messageBox.classList.add("hidden");
   endScreen.classList.remove("hidden");
 
-  endTitle.textContent = "Game Over";
-  endText.textContent = "The killer rabbit caught you 3 times. Collect all 4 keys and escape next time.";
+  endEyebrow.textContent = "GAME OVER";
+  endTitle.textContent = "Caught by the Killer Rabbit";
+  endText.textContent = "You were caught 3 times. Try again, collect all 4 keys, and escape.";
+  endTime.textContent = startTime ? `${Math.floor((Date.now() - startTime) / 1000)}s` : "--";
+  endHearts.textContent = "0";
+  endKeys.textContent = `${collectedKeys.length}/4`;
+  endBestTime.textContent = localStorage.getItem("rabbitEscapeBestTime")
+    ? `${localStorage.getItem("rabbitEscapeBestTime")}s`
+    : "--";
 }
 
 function winGame() {
@@ -304,14 +316,21 @@ function winGame() {
   endScreen.classList.remove("hidden");
 
   const totalSeconds = Math.floor((Date.now() - startTime) / 1000);
-  const best = localStorage.getItem("rabbitEscapeBestTime");
+  const currentBest = localStorage.getItem("rabbitEscapeBestTime");
 
-  if (!best || totalSeconds < Number(best)) {
+  if (!currentBest || totalSeconds < Number(currentBest)) {
     localStorage.setItem("rabbitEscapeBestTime", String(totalSeconds));
   }
 
-  endTitle.textContent = "You Escaped!";
-  endText.textContent = `You got all 4 keys and escaped in ${totalSeconds}s with ${hearts} heart${hearts === 1 ? "" : "s"} left.`;
+  const best = localStorage.getItem("rabbitEscapeBestTime");
+
+  endEyebrow.textContent = "YOU ESCAPED";
+  endTitle.textContent = "School Escape Complete!";
+  endText.textContent = "You found all 4 keys and escaped before the killer rabbit could stop you.";
+  endTime.textContent = `${totalSeconds}s`;
+  endHearts.textContent = `${hearts}`;
+  endKeys.textContent = `${collectedKeys.length}/4`;
+  endBestTime.textContent = best ? `${best}s` : "--";
 
   updateBestTime();
 }
