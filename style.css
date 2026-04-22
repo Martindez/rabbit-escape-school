@@ -192,15 +192,15 @@ body {
 }
 
 .player-token {
-  width: 74px;
-  height: 74px;
+  width: 78px;
+  height: 78px;
   object-fit: contain;
   opacity: 1;
   filter:
     drop-shadow(0 0 2px #ffffff)
     drop-shadow(0 0 8px #ffffff)
-    drop-shadow(0 0 16px rgba(80,180,255,0.95))
-    drop-shadow(0 0 28px rgba(80,180,255,0.75));
+    drop-shadow(0 0 16px rgba(80,180,255,1))
+    drop-shadow(0 0 30px rgba(80,180,255,0.9));
   animation: heroBounce 1.2s infinite alternate;
 }
 
@@ -254,8 +254,8 @@ body {
   }
 
   .player-token {
-  width: 58px;
-  height: 58px;
+  width: 62px;
+  height: 62px;
 }
 
   .killer-token {
