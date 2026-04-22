@@ -102,7 +102,6 @@ body {
   display: block;
 }
 
-/* CLICKABLE ROOM HOTSPOTS */
 .room-marker {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -139,7 +138,6 @@ body {
   box-shadow: 0 0 0 3px rgba(255,0,0,0.16);
 }
 
-/* ROOM POSITIONS */
 .room-marker.electrical {
   top: 18%;
   left: 20%;
@@ -182,7 +180,6 @@ body {
   height: 72px;
 }
 
-/* CHARACTER TOKENS */
 .token {
   position: absolute;
   transform: translate(-50%, -50%);
@@ -194,24 +191,24 @@ body {
     transform 0.2s ease;
 }
 
-/* HERO RABBIT */
 .player-token {
-  font-size: 38px;
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
   filter:
-    drop-shadow(0 0 4px #fff)
-    drop-shadow(0 0 10px rgba(255,255,255,0.8))
-    drop-shadow(0 0 18px rgba(90,170,255,0.55));
+    drop-shadow(0 0 8px rgba(80,180,255,0.85))
+    drop-shadow(0 0 18px rgba(255,255,255,0.35));
   animation: heroBounce 1.2s infinite alternate;
 }
 
-/* KILLER MONSTER */
 .killer-token {
-  font-size: 54px;
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
   filter:
-    drop-shadow(0 0 2px #000)
-    drop-shadow(0 0 8px #ff0000)
-    drop-shadow(0 0 18px #8b0000)
-    drop-shadow(0 0 28px rgba(120,0,0,1));
+    drop-shadow(0 0 10px red)
+    drop-shadow(0 0 24px darkred)
+    drop-shadow(0 0 34px rgba(120,0,0,0.95));
   animation: killerPulse 0.65s infinite alternate;
 }
 
@@ -220,7 +217,7 @@ body {
     transform: translate(-50%, -50%) scale(1);
   }
   to {
-    transform: translate(-50%, -50%) scale(1.08);
+    transform: translate(-50%, -50%) scale(1.06);
   }
 }
 
@@ -229,7 +226,7 @@ body {
     transform: translate(-50%, -50%) scale(1);
   }
   to {
-    transform: translate(-50%, -50%) scale(1.16);
+    transform: translate(-50%, -50%) scale(1.14);
   }
 }
 
@@ -239,7 +236,6 @@ body {
   min-height: 24px;
 }
 
-/* MOBILE */
 @media (max-width: 700px) {
   .hud-grid {
     grid-template-columns: 1fr;
@@ -255,10 +251,12 @@ body {
   }
 
   .player-token {
-    font-size: 30px;
+    width: 44px;
+    height: 44px;
   }
 
   .killer-token {
-    font-size: 44px;
+    width: 64px;
+    height: 64px;
   }
 }
