@@ -99,35 +99,77 @@ body {
 .room-marker {
   position: absolute;
   transform: translate(-50%, -50%);
-  border: none;
-  border-radius: 999px;
-  background: rgba(10, 10, 10, 0.82);
-  color: white;
-  font-weight: bold;
-  padding: 10px 14px;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 18px;
   cursor: pointer;
   z-index: 3;
-  white-space: nowrap;
+  color: transparent;
+  font-size: 0;
+}
+
+.room-marker:hover {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .room-marker.connected {
-  background: rgba(35, 105, 50, 0.95);
+  border-color: rgba(80, 220, 120, 0.75);
+  background: rgba(80, 220, 120, 0.12);
 }
 
 .room-marker.locked {
-  opacity: 0.45;
+  opacity: 0.35;
 }
 
 .room-marker.current {
-  outline: 3px solid white;
+  border-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
 }
 
 .room-marker.killer-room {
-  box-shadow: inset 0 0 0 3px #c40000;
+  border-color: rgba(220, 0, 0, 0.9);
 }
 
-.room-marker.key-room::after {
-  content: " 🔑";
+.room-marker.electrical {
+  top: 18%;
+  left: 20%;
+  width: 170px;
+  height: 70px;
+}
+
+.room-marker.gym {
+  top: 18%;
+  left: 50%;
+  width: 145px;
+  height: 70px;
+}
+
+.room-marker.kitchen {
+  top: 18%;
+  left: 80%;
+  width: 155px;
+  height: 70px;
+}
+
+.room-marker.security {
+  top: 52%;
+  left: 14%;
+  width: 155px;
+  height: 70px;
+}
+
+.room-marker.playground {
+  top: 56%;
+  left: 50%;
+  width: 190px;
+  height: 72px;
+}
+
+.room-marker.exit-room {
+  top: 83%;
+  left: 50%;
+  width: 120px;
+  height: 72px;
 }
 
 .token {
@@ -148,9 +190,14 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .room-marker {
-    font-size: 12px;
-    padding: 8px 10px;
+  .room-marker.electrical,
+  .room-marker.gym,
+  .room-marker.kitchen,
+  .room-marker.security,
+  .room-marker.playground,
+  .room-marker.exit-room {
+    transform: translate(-50%, -50%) scale(0.82);
+    transform-origin: center;
   }
 
   .token {
