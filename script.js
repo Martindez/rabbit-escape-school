@@ -109,59 +109,67 @@ async function movePlayer(targetRoom) {
 
   isBusy = true;
 
-  flashSelectedRoom(targetRoom);
-  showMessage(`Moving to ${targetRoom}...`);
-  await sleep(140);
+  try {
+    flashSelectedRoom(targetRoom);
+    showMessage(`Moving to ${targetRoom}...`);
+    await sleep(140);
 
-  playerRoom = targetRoom;
-  updateUI();
-  await sleep(320);
+    playerRoom = targetRoom;
+    updateUI();
+    await sleep(320);
 
-  handleRoomArrival();
+    handleRoomArrival();
+    updateUI();
 
-  if (!gameStarted) {
-    isBusy = false;
-    return;
-  }
+    if (!gameStarted) return;
 
-  if (playerRoom === killerRoom) {
-    playerHit();
-    if (!gameStarted) {
-      isBusy = false;
+    if (playerRoom === killerRoom) {
+      playerHit();
+      updateUI();
+      if (!gameStarted) return;
+      await sleep(250);
+    }
+
+    if (playerRoom === "Exit" && exitIsOpen()) {
+      winGame();
       return;
     }
+
+    showMessage("The killer is moving...");
+    addKillerTurnEffect(true);
+    await sleep(260);
+
+    moveKiller();
     updateUI();
-    await sleep(250);
-  }
+    await sleep(320);
+    addKillerTurnEffect(false);
 
-  showMessage("The killer is moving...");
-  addKillerTurnEffect(true);
-  await sleep(260);
+    if (playerRoom === killerRoom) {
+      playerHit();
+      updateUI();
+      if (!gameStarted) return;
+      await sleep(250);
+    }
 
-  moveKiller();
-  updateUI();
-  await sleep(320);
-  addKillerTurnEffect(false);
-
-  if (playerRoom === killerRoom) {
-    playerHit();
-    if (!gameStarted) {
-      isBusy = false;
+    if (playerRoom === "Exit" && exitIsOpen()) {
+      winGame();
       return;
     }
+
+    const distance = getDistance(playerRoom, killerRoom);
+    if (distance === 1) {
+      showMessage("Warning: The killer is very close!");
+    } else if (exitIsOpen() && playerRoom !== "Exit") {
+      showMessage("All keys collected! The Exit is OPEN!");
+    } else {
+      showMessage(`You are in ${playerRoom}.`);
+    }
+
     updateUI();
+  } finally {
+    addKillerTurnEffect(false);
     isBusy = false;
-    return;
   }
-
-  if (playerRoom === "Exit" && exitIsOpen()) {
-    winGame();
-    isBusy = false;
-    return;
-  }
-
-  updateUI();
-  isBusy = false;
 }
 
 function handleRoomArrival() {
