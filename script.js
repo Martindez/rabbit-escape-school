@@ -10,12 +10,12 @@ const rooms = {
 const keyRooms = ["Electrical", "Gym", "Kitchen", "Security"];
 
 const roomPositions = {
-  Electrical: { top: 24, left: 20 },
-  Gym: { top: 24, left: 50 },
-  Kitchen: { top: 24, left: 80 },
-  Security: { top: 58, left: 14 },
-  Playground: { top: 62, left: 50 },
-  Exit: { top: 88, left: 50 }
+  Electrical: { top: 18, left: 20 },
+  Gym: { top: 18, left: 50 },
+  Kitchen: { top: 18, left: 80 },
+  Security: { top: 52, left: 14 },
+  Playground: { top: 56, left: 50 },
+  Exit: { top: 83, left: 50 }
 };
 
 let playerRoom = "Playground";
@@ -245,7 +245,7 @@ function updateBoard() {
   roomButtons.forEach((button) => {
     const room = button.dataset.room;
 
-    button.classList.remove("connected", "locked", "current", "killer-room", "key-room");
+    button.classList.remove("connected", "locked", "current", "killer-room");
 
     if (room === playerRoom) {
       button.classList.add("current");
@@ -260,10 +260,6 @@ function updateBoard() {
 
     if (room === killerRoom) {
       button.classList.add("killer-room");
-    }
-
-    if (keyRooms.includes(room) && !collectedKeys.includes(room)) {
-      button.classList.add("key-room");
     }
   });
 
