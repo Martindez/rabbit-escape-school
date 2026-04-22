@@ -86,6 +86,19 @@ body {
   transition: width 0.25s ease;
 }
 
+.danger-bar.danger-high {
+  animation: dangerPulse 0.6s infinite alternate;
+}
+
+@keyframes dangerPulse {
+  from {
+    filter: brightness(1);
+  }
+  to {
+    filter: brightness(1.3);
+  }
+}
+
 .map-board {
   position: relative;
   width: 100%;
@@ -95,6 +108,15 @@ body {
   border-radius: 18px;
   overflow: hidden;
   background: #000;
+}
+
+.map-board.killer-turn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(120, 0, 0, 0.08);
+  pointer-events: none;
+  z-index: 2;
 }
 
 .map-image {
@@ -107,14 +129,19 @@ body {
 .room-marker {
   position: absolute;
   transform: translate(-50%, -50%);
-  border: 2px solid rgba(255, 255, 255, 0.16);
+  border: 2px solid rgba(255, 255, 255, 0.14);
   background: rgba(255, 255, 255, 0.02);
   border-radius: 18px;
   cursor: pointer;
   z-index: 3;
   color: transparent;
   font-size: 0;
-  transition: 0.2s ease;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    opacity 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
 }
 
 .room-marker:hover {
@@ -122,32 +149,56 @@ body {
 }
 
 .room-marker.connected {
-  border-color: rgba(80, 220, 120, 0.75);
-  background: rgba(80, 220, 120, 0.14);
+  border-color: rgba(90, 255, 130, 0.95);
+  background: rgba(90, 255, 130, 0.16);
+  box-shadow:
+    0 0 0 2px rgba(90, 255, 130, 0.12),
+    0 0 18px rgba(90, 255, 130, 0.2);
 }
 
 .room-marker.locked {
-  opacity: 0.28;
+  opacity: 0.22;
 }
 
 .room-marker.current {
-  border-color: white;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.18);
+  border-color: #ffffff;
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.18),
+    0 0 18px rgba(255, 255, 255, 0.08);
 }
 
 .room-marker.killer-room {
   border-color: rgba(255, 0, 0, 0.95);
-  box-shadow: 0 0 0 3px rgba(255, 0, 0, 0.16);
+  box-shadow:
+    0 0 0 3px rgba(255, 0, 0, 0.16),
+    0 0 18px rgba(255, 0, 0, 0.2);
 }
 
 .room-marker.exit-open {
   border-color: #4cff72;
-  box-shadow: 0 0 0 3px rgba(76, 255, 114, 0.2);
-  background: rgba(76, 255, 114, 0.12);
+  box-shadow:
+    0 0 0 3px rgba(76, 255, 114, 0.22),
+    0 0 20px rgba(76, 255, 114, 0.25);
+  background: rgba(76, 255, 114, 0.14);
 }
 
 .room-marker.room-cleared {
-  opacity: 0.18;
+  opacity: 0.16;
+}
+
+.room-marker.selected-room {
+  animation: roomSelectPulse 0.25s ease;
+}
+
+@keyframes roomSelectPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.35);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.08);
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+  }
 }
 
 .room-marker.electrical {
@@ -198,8 +249,8 @@ body {
   z-index: 4;
   pointer-events: none;
   transition:
-    top 0.22s ease,
-    left 0.22s ease,
+    top 0.32s ease,
+    left 0.32s ease,
     transform 0.2s ease;
 }
 
