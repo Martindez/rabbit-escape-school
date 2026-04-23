@@ -25,14 +25,14 @@
     <section id="startScreen" class="panel screen">
       <div class="start-card">
         <p class="eyebrow">LEVEL 1</p>
-        <h2 class="game-title">School Escape</h2>
+        <h2 class="game-title">School Escape V2</h2>
         <p class="start-tagline">
-          Collect all 4 keys, avoid the killer rabbit, and escape through the Exit.
+          Search the school, collect all 4 glowing keys, avoid the killer rabbit, and escape.
         </p>
 
         <div class="start-rules">
-          <div class="rule-pill">Click glowing rooms to move</div>
-          <div class="rule-pill">Only connected rooms work</div>
+          <div class="rule-pill">Click connected rooms to move</div>
+          <div class="rule-pill">Look for glowing keys on the map</div>
           <div class="rule-pill">Collect 4 keys to unlock Exit</div>
           <div class="rule-pill">Caught 3 times = lose</div>
         </div>
@@ -62,12 +62,24 @@
       <div class="map-board">
         <img src="./assets/map.jpg" alt="School map" class="map-image" />
 
-        <button class="room-marker electrical" data-room="Electrical" aria-label="Electrical"></button>
-        <button class="room-marker gym" data-room="Gym" aria-label="Gym"></button>
-        <button class="room-marker kitchen" data-room="Kitchen" aria-label="Kitchen"></button>
-        <button class="room-marker security" data-room="Security" aria-label="Security"></button>
-        <button class="room-marker playground" data-room="Playground" aria-label="Playground"></button>
-        <button class="room-marker exit-room" data-room="Exit" aria-label="Exit"></button>
+        <!-- subtle room hotspots -->
+        <button class="room-hotspot electrical" data-room="Electrical" aria-label="Electrical"></button>
+        <button class="room-hotspot gym" data-room="Gym" aria-label="Gym"></button>
+        <button class="room-hotspot kitchen" data-room="Kitchen" aria-label="Kitchen"></button>
+        <button class="room-hotspot security" data-room="Security" aria-label="Security"></button>
+        <button class="room-hotspot playground" data-room="Playground" aria-label="Playground"></button>
+        <button class="room-hotspot exit-room" data-room="Exit" aria-label="Exit"></button>
+
+        <!-- small room glow rings -->
+        <div class="room-ring electrical-ring" data-ring="Electrical"></div>
+        <div class="room-ring gym-ring" data-ring="Gym"></div>
+        <div class="room-ring kitchen-ring" data-ring="Kitchen"></div>
+        <div class="room-ring security-ring" data-ring="Security"></div>
+        <div class="room-ring playground-ring" data-ring="Playground"></div>
+        <div class="room-ring exit-ring" data-ring="Exit"></div>
+
+        <!-- visible random keys -->
+        <div id="keyLayer" class="key-layer"></div>
 
         <img id="playerToken" class="token player-token" src="../assets/player.png" alt="Player" />
         <img id="killerToken" class="token killer-token" src="../assets/killer.png" alt="Killer" />

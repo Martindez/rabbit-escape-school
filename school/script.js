@@ -14,9 +14,27 @@ const roomPositions = {
   Electrical: { top: 18, left: 20 },
   Gym: { top: 18, left: 50 },
   Kitchen: { top: 18, left: 80 },
-  Security: { top: 52, left: 14 },
-  Playground: { top: 56, left: 50 },
+  Security: { top: 57, left: 14 },
+  Playground: { top: 58, left: 50 },
   Exit: { top: 83, left: 50 }
+};
+
+const roomKeySpawnAreas = {
+  Electrical: [
+    { top: 16, left: 13 }, { top: 18, left: 24 }, { top: 21, left: 19 }
+  ],
+  Gym: [
+    { top: 14, left: 45 }, { top: 19, left: 54 }, { top: 22, left: 48 }
+  ],
+  Kitchen: [
+    { top: 15, left: 76 }, { top: 18, left: 84 }, { top: 22, left: 79 }
+  ],
+  Security: [
+    { top: 53, left: 12 }, { top: 58, left: 18 }, { top: 61, left: 10 }
+  ],
+  Playground: [
+    { top: 50, left: 44 }, { top: 56, left: 58 }, { top: 63, left: 49 }
+  ]
 };
 
 let playerRoom = "Playground";
@@ -30,6 +48,7 @@ let startTime = 0;
 let lastWarningTime = 0;
 let audioContext = null;
 let safeTurns = 0;
+let keyVisualPositions = {};
 
 const startScreen = document.getElementById("startScreen");
 const hud = document.getElementById("hud");
@@ -59,11 +78,13 @@ const playerToken = document.getElementById("playerToken");
 const killerToken = document.getElementById("killerToken");
 const flashOverlay = document.getElementById("flashOverlay");
 const jumpscareOverlay = document.getElementById("jumpscareOverlay");
+const keyLayer = document.getElementById("keyLayer");
 
 const startBtn = document.getElementById("startBtn");
 const restartBtn = document.getElementById("restartBtn");
 const nextLevelBtn = document.getElementById("nextLevelBtn");
-const roomButtons = document.querySelectorAll(".room-marker");
+const roomButtons = document.querySelectorAll(".room-hotspot");
+const roomRings = document.querySelectorAll(".room-ring");
 
 startBtn.addEventListener("click", startGame);
 restartBtn.addEventListener("click", resetGame);
@@ -181,6 +202,12 @@ function shuffle(array) {
 
 function assignRandomKeys() {
   keyRooms = shuffle(possibleKeyRooms).slice(0, totalKeys);
+  keyVisualPositions = {};
+
+  keyRooms.forEach((room) => {
+    const options = roomKeySpawnAreas[room];
+    keyVisualPositions[room] = options[Math.floor(Math.random() * options.length)];
+  });
 }
 
 function startGame() {
@@ -205,7 +232,7 @@ function startGame() {
     nextLevelBtn.classList.add("hidden");
   }
 
-  showMessage("Goal: Collect all 4 keys, then reach the Exit.");
+  showMessage("Goal: Collect all 4 glowing keys, then reach the Exit.");
   updateUI();
 }
 
@@ -213,6 +240,7 @@ function resetGame() {
   playerRoom = "Playground";
   killerRoom = "Kitchen";
   keyRooms = [];
+  keyVisualPositions = {};
   collectedKeys = [];
   hearts = maxHearts;
   safeTurns = 0;
@@ -230,13 +258,14 @@ function resetGame() {
     nextLevelBtn.classList.add("hidden");
   }
 
+  renderKeys();
   showMessage("Press Start to begin.");
   updateUI();
 }
 
 function movePlayer(targetRoom) {
   if (!rooms[playerRoom].includes(targetRoom)) {
-    showMessage("You can only move to glowing connected rooms.");
+    showMessage("You can only move to connected glowing rooms.");
     return;
   }
 
@@ -458,23 +487,31 @@ function setTokenPosition(token, roomName) {
   token.style.left = `${roomPositions[roomName].left}%`;
 }
 
+function renderKeys() {
+  if (!keyLayer) return;
+  keyLayer.innerHTML = "";
+
+  keyRooms.forEach((room) => {
+    if (collectedKeys.includes(room)) return;
+    const pos = keyVisualPositions[room];
+    if (!pos) return;
+
+    const key = document.createElement("div");
+    key.className = "map-key";
+    key.textContent = "🔑";
+    key.style.top = `${pos.top}%`;
+    key.style.left = `${pos.left}%`;
+    keyLayer.appendChild(key);
+  });
+}
+
 function updateBoard() {
   roomButtons.forEach((button) => {
     const room = button.dataset.room;
-
-    button.classList.remove(
-      "connected",
-      "locked",
-      "current",
-      "killer-room",
-      "exit-open",
-      "room-cleared",
-      "key-room",
-      "safe-turn"
-    );
+    button.classList.remove("connected", "locked");
 
     if (room === playerRoom) {
-      button.classList.add("current");
+      button.classList.add("locked");
       button.disabled = true;
     } else if (rooms[playerRoom].includes(room)) {
       button.classList.add("connected");
@@ -483,30 +520,34 @@ function updateBoard() {
       button.classList.add("locked");
       button.disabled = true;
     }
+  });
+
+  roomRings.forEach((ring) => {
+    const room = ring.dataset.ring;
+    ring.classList.remove("connected", "current", "killer-room", "exit-open", "safe-turn");
+
+    if (room === playerRoom) {
+      if (safeTurns > 0) {
+        ring.classList.add("safe-turn");
+      } else {
+        ring.classList.add("current");
+      }
+    } else if (rooms[playerRoom].includes(room)) {
+      ring.classList.add("connected");
+    }
 
     if (room === killerRoom) {
-      button.classList.add("killer-room");
-    }
-
-    if (collectedKeys.includes(room)) {
-      button.classList.add("room-cleared");
-    }
-
-    if (keyRooms.includes(room) && !collectedKeys.includes(room)) {
-      button.classList.add("key-room");
+      ring.classList.add("killer-room");
     }
 
     if (room === "Exit" && exitIsOpen()) {
-      button.classList.add("exit-open");
-    }
-
-    if (safeTurns > 0 && room === playerRoom) {
-      button.classList.add("safe-turn");
+      ring.classList.add("exit-open");
     }
   });
 
   setTokenPosition(playerToken, playerRoom);
   setTokenPosition(killerToken, killerRoom);
+  renderKeys();
 }
 
 function maybeShowDangerWarning() {

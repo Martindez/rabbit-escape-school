@@ -106,124 +106,117 @@ body {
   display: block;
 }
 
-.room-marker {
+/* HOTSPOTS */
+.room-hotspot {
   position: absolute;
   transform: translate(-50%, -50%);
-  border: 2px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 18px;
+  border: none;
+  background: transparent;
   cursor: pointer;
-  z-index: 3;
-  color: transparent;
-  font-size: 0;
+  z-index: 5;
+  border-radius: 999px;
+}
+
+.room-hotspot.electrical { top: 18%; left: 20%; width: 110px; height: 50px; }
+.room-hotspot.gym { top: 18%; left: 50%; width: 100px; height: 50px; }
+.room-hotspot.kitchen { top: 18%; left: 80%; width: 110px; height: 50px; }
+.room-hotspot.security { top: 57%; left: 14%; width: 110px; height: 52px; }
+.room-hotspot.playground { top: 58%; left: 50%; width: 130px; height: 54px; }
+.room-hotspot.exit-room { top: 83%; left: 50%; width: 90px; height: 54px; }
+
+.room-hotspot.locked {
+  pointer-events: none;
+}
+
+.room-hotspot.connected:hover + .room-ring,
+.room-hotspot.connected:hover {
+  filter: brightness(1.08);
+}
+
+/* ROOM RINGS */
+.room-ring {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
   transition: 0.18s ease;
 }
 
-.room-marker:hover {
-  background: rgba(255, 255, 255, 0.08);
+.electrical-ring { top: 18%; left: 20%; width: 120px; height: 56px; }
+.gym-ring { top: 18%; left: 50%; width: 110px; height: 56px; }
+.kitchen-ring { top: 18%; left: 80%; width: 120px; height: 56px; }
+.security-ring { top: 57%; left: 14%; width: 120px; height: 58px; }
+.playground-ring { top: 58%; left: 50%; width: 140px; height: 60px; }
+.exit-ring { top: 83%; left: 50%; width: 96px; height: 58px; }
+
+.room-ring.connected {
+  opacity: 1;
+  border: 2px solid rgba(80, 220, 120, 0.85);
+  box-shadow: 0 0 18px rgba(80, 220, 120, 0.22);
+  background: rgba(80, 220, 120, 0.06);
 }
 
-.room-marker.connected {
-  border-color: rgba(80, 220, 120, 0.9);
-  background: rgba(80, 220, 120, 0.16);
-  box-shadow:
-    0 0 0 2px rgba(80, 220, 120, 0.14),
-    0 0 18px rgba(80, 220, 120, 0.18);
+.room-ring.current {
+  opacity: 1;
+  border: 2px solid rgba(255,255,255,0.95);
+  box-shadow: 0 0 20px rgba(255,255,255,0.16);
+  background: rgba(255,255,255,0.06);
 }
 
-.room-marker.locked {
-  opacity: 0.18;
+.room-ring.killer-room {
+  opacity: 1;
+  border: 2px solid rgba(255,0,0,0.95);
+  box-shadow: 0 0 24px rgba(255,0,0,0.25);
+  background: rgba(255,0,0,0.08);
 }
 
-.room-marker.current {
-  border-color: white;
-  box-shadow:
-    0 0 0 3px rgba(255, 255, 255, 0.20),
-    0 0 18px rgba(255, 255, 255, 0.08);
+.room-ring.exit-open {
+  opacity: 1;
+  border: 2px solid #4cff72;
+  box-shadow: 0 0 24px rgba(76,255,114,0.26);
+  background: rgba(76,255,114,0.10);
 }
 
-.room-marker.killer-room {
-  border-color: rgba(255, 0, 0, 0.95);
-  box-shadow:
-    0 0 0 3px rgba(255, 0, 0, 0.16),
-    0 0 20px rgba(180, 0, 0, 0.22);
+.room-ring.safe-turn {
+  opacity: 1;
+  border: 2px solid rgba(80, 180, 255, 0.9);
+  box-shadow: 0 0 22px rgba(80, 180, 255, 0.24);
+  background: rgba(80, 180, 255, 0.08);
 }
 
-.room-marker.key-room {
-  border-color: rgba(255, 208, 0, 0.9);
-  box-shadow:
-    0 0 0 2px rgba(255, 208, 0, 0.22),
-    0 0 18px rgba(255, 208, 0, 0.16);
-  animation: keyPulse 1s infinite alternate;
+/* KEYS */
+.key-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
 }
 
-.room-marker.exit-open {
-  border-color: #4cff72;
-  box-shadow:
-    0 0 0 3px rgba(76, 255, 114, 0.2),
-    0 0 24px rgba(76, 255, 114, 0.25);
-  background: rgba(76, 255, 114, 0.12);
+.map-key {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-size: 28px;
+  line-height: 1;
+  text-shadow:
+    0 0 8px rgba(255, 208, 0, 0.95),
+    0 0 18px rgba(255, 208, 0, 0.55);
+  animation: keyFloat 1.2s ease-in-out infinite alternate;
 }
 
-.room-marker.room-cleared {
-  opacity: 0.12;
+@keyframes keyFloat {
+  from { transform: translate(-50%, -50%) translateY(0px) scale(1); }
+  to { transform: translate(-50%, -50%) translateY(-5px) scale(1.05); }
 }
 
-.room-marker.safe-turn {
-  outline: 3px solid rgba(80, 180, 255, 0.55);
-}
-
-.room-marker.electrical {
-  top: 18%;
-  left: 20%;
-  width: 180px;
-  height: 78px;
-}
-
-.room-marker.gym {
-  top: 18%;
-  left: 50%;
-  width: 165px;
-  height: 78px;
-}
-
-.room-marker.kitchen {
-  top: 18%;
-  left: 80%;
-  width: 170px;
-  height: 78px;
-}
-
-.room-marker.security {
-  top: 52%;
-  left: 14%;
-  width: 165px;
-  height: 78px;
-}
-
-.room-marker.playground {
-  top: 56%;
-  left: 50%;
-  width: 210px;
-  height: 82px;
-}
-
-.room-marker.exit-room {
-  top: 83%;
-  left: 50%;
-  width: 135px;
-  height: 78px;
-}
-
+/* TOKENS */
 .token {
   position: absolute;
   transform: translate(-50%, -50%);
-  z-index: 4;
+  z-index: 6;
   pointer-events: none;
-  transition:
-    top 0.22s ease,
-    left 0.22s ease,
-    transform 0.2s ease;
+  transition: top 0.22s ease, left 0.22s ease, transform 0.2s ease;
 }
 
 .player-token {
@@ -258,19 +251,6 @@ body {
 @keyframes killerPulse {
   from { transform: translate(-50%, -50%) scale(1); }
   to { transform: translate(-50%, -50%) scale(1.14); }
-}
-
-@keyframes keyPulse {
-  from {
-    box-shadow:
-      0 0 0 2px rgba(255, 208, 0, 0.16),
-      0 0 10px rgba(255, 208, 0, 0.12);
-  }
-  to {
-    box-shadow:
-      0 0 0 2px rgba(255, 208, 0, 0.28),
-      0 0 20px rgba(255, 208, 0, 0.22);
-  }
 }
 
 #messageText {
@@ -358,8 +338,7 @@ body {
   gap: 10px;
 }
 
-/* SAFE JUMPSCARE + FLASH BLOCK */
-
+/* FLASH + JUMPSCARE */
 .flash-overlay {
   position: fixed;
   inset: 0;
@@ -461,15 +440,6 @@ body {
     font-size: 0.9rem;
   }
 
-  .room-marker.electrical,
-  .room-marker.gym,
-  .room-marker.kitchen,
-  .room-marker.security,
-  .room-marker.playground,
-  .room-marker.exit-room {
-    transform: translate(-50%, -50%) scale(0.84);
-  }
-
   .player-token {
     width: 60px;
     height: 60px;
@@ -478,6 +448,10 @@ body {
   .killer-token {
     width: 70px;
     height: 70px;
+  }
+
+  .map-key {
+    font-size: 24px;
   }
 
   .end-stats {
