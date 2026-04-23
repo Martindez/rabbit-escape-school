@@ -46,7 +46,7 @@ body {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .main-btn {
@@ -128,11 +128,6 @@ body {
   pointer-events: none;
 }
 
-.room-hotspot.connected:hover + .room-ring,
-.room-hotspot.connected:hover {
-  filter: brightness(1.08);
-}
-
 /* ROOM RINGS */
 .room-ring {
   position: absolute;
@@ -160,23 +155,23 @@ body {
 
 .room-ring.current {
   opacity: 1;
-  border: 2px solid rgba(255,255,255,0.95);
-  box-shadow: 0 0 20px rgba(255,255,255,0.16);
-  background: rgba(255,255,255,0.06);
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .room-ring.killer-room {
   opacity: 1;
-  border: 2px solid rgba(255,0,0,0.95);
-  box-shadow: 0 0 24px rgba(255,0,0,0.25);
-  background: rgba(255,0,0,0.08);
+  border: 2px solid rgba(255, 0, 0, 0.95);
+  box-shadow: 0 0 24px rgba(255, 0, 0, 0.25);
+  background: rgba(255, 0, 0, 0.08);
 }
 
 .room-ring.exit-open {
   opacity: 1;
   border: 2px solid #4cff72;
-  box-shadow: 0 0 24px rgba(76,255,114,0.26);
-  background: rgba(76,255,114,0.10);
+  box-shadow: 0 0 24px rgba(76, 255, 114, 0.26);
+  background: rgba(76, 255, 114, 0.10);
 }
 
 .room-ring.safe-turn {
@@ -186,7 +181,7 @@ body {
   background: rgba(80, 180, 255, 0.08);
 }
 
-/* KEYS */
+/* KEY LAYER */
 .key-layer {
   position: absolute;
   inset: 0;
@@ -338,7 +333,7 @@ body {
   gap: 10px;
 }
 
-/* FLASH + JUMPSCARE */
+/* FLASH */
 .flash-overlay {
   position: fixed;
   inset: 0;
@@ -356,6 +351,19 @@ body {
   animation: flashWarning 0.25s ease-out;
 }
 
+@keyframes flashHit {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes flashWarning {
+  0% { opacity: 0; }
+  35% { opacity: 0.55; }
+  100% { opacity: 0; }
+}
+
+/* JUMPSCARE */
 .jumpscare-overlay {
   position: fixed;
   inset: 0;
@@ -366,8 +374,12 @@ body {
   overflow: hidden;
 }
 
+#jumpscareOverlay.hidden,
 .jumpscare-overlay.hidden {
-  display: none;
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .jumpscare-bg {
@@ -409,18 +421,6 @@ body {
   100% { opacity: 1; transform: scale(1); }
 }
 
-@keyframes flashHit {
-  0% { opacity: 0; }
-  20% { opacity: 1; }
-  100% { opacity: 0; }
-}
-
-@keyframes flashWarning {
-  0% { opacity: 0; }
-  35% { opacity: 0.55; }
-  100% { opacity: 0; }
-}
-
 .shake {
   animation: screenShake 0.25s linear;
 }
@@ -457,14 +457,4 @@ body {
   .end-stats {
     grid-template-columns: repeat(2, minmax(100px, 1fr));
   }
-  .hidden {
-  display: none !important;
-}
-
-#jumpscareOverlay.hidden,
-.jumpscare-overlay.hidden {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
 }

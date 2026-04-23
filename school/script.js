@@ -86,6 +86,26 @@ const nextLevelBtn = document.getElementById("nextLevelBtn");
 const roomButtons = document.querySelectorAll(".room-hotspot");
 const roomRings = document.querySelectorAll(".room-ring");
 
+function hardHideJumpscare() {
+  if (!jumpscareOverlay) return;
+  jumpscareOverlay.classList.add("hidden");
+  jumpscareOverlay.style.display = "none";
+  jumpscareOverlay.style.visibility = "hidden";
+  jumpscareOverlay.style.pointerEvents = "none";
+}
+
+function showJumpscareOverlay() {
+  if (!jumpscareOverlay) return;
+  jumpscareOverlay.classList.remove("hidden");
+  jumpscareOverlay.style.display = "flex";
+  jumpscareOverlay.style.visibility = "visible";
+  jumpscareOverlay.style.pointerEvents = "auto";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  hardHideJumpscare();
+});
+
 startBtn.addEventListener("click", startGame);
 restartBtn.addEventListener("click", resetGame);
 
@@ -180,12 +200,12 @@ function shakeScreen() {
 function showJumpscare(duration = 650) {
   if (!jumpscareOverlay) return Promise.resolve();
 
-  jumpscareOverlay.classList.remove("hidden");
+  showJumpscareOverlay();
   shakeScreen();
 
   return new Promise((resolve) => {
     setTimeout(() => {
-      jumpscareOverlay.classList.add("hidden");
+      hardHideJumpscare();
       resolve();
     }, duration);
   });
@@ -212,6 +232,7 @@ function assignRandomKeys() {
 
 function startGame() {
   initAudio();
+  hardHideJumpscare();
   assignRandomKeys();
   playerRoom = "Playground";
   killerRoom = "Kitchen";
@@ -237,6 +258,7 @@ function startGame() {
 }
 
 function resetGame() {
+  hardHideJumpscare();
   playerRoom = "Playground";
   killerRoom = "Kitchen";
   keyRooms = [];
@@ -378,6 +400,7 @@ async function playerHit() {
 }
 
 function loseGame() {
+  hardHideJumpscare();
   gameStarted = false;
   hud.classList.add("hidden");
   gameWrap.classList.add("hidden");
@@ -400,6 +423,7 @@ function loseGame() {
 }
 
 function winGame() {
+  hardHideJumpscare();
   gameStarted = false;
   hud.classList.add("hidden");
   gameWrap.classList.add("hidden");
@@ -581,4 +605,5 @@ function showMessage(text) {
   messageText.textContent = text;
 }
 
+hardHideJumpscare();
 updateUI();
