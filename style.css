@@ -5,89 +5,121 @@
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  color: white;
   background: #000;
+  color: white;
 }
+
+/* BACKGROUND */
 
 .menu-shell {
   min-height: 100vh;
   position: relative;
   background:
-    linear-gradient(rgba(0,0,0,0.68), rgba(0,0,0,0.82)),
-    url("assets/menu-bg.jpg") center/cover no-repeat;
+    linear-gradient(rgba(0,0,0,0.42), rgba(0,0,0,0.80)),
+    url("assets/menu-bg-clean.jpg") center center / cover no-repeat;
   display: flex;
-  align-items: flex-end;
   justify-content: center;
-  padding: 24px;
+  align-items: flex-end;
+  padding: 28px;
 }
 
 .menu-overlay {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at center, rgba(0,0,0,0.18), rgba(0,0,0,0.72));
+    radial-gradient(circle at center,
+      rgba(0,0,0,0.10),
+      rgba(0,0,0,0.55),
+      rgba(0,0,0,0.75));
 }
+
+/* CONTENT */
 
 .menu-content {
   position: relative;
   z-index: 2;
   width: 100%;
-  max-width: 980px;
+  max-width: 1050px;
 }
 
+/* PANEL */
+
 .menu-panel {
-  background: rgba(8, 8, 8, 0.70);
-  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(8,8,8,0.55);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 24px;
-  padding: 22px;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+  padding: 28px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.50);
 }
+
+/* TITLE */
+
+.menu-title-wrap {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.menu-title-wrap h1 {
+  margin: 0;
+  font-size: clamp(2.6rem, 7vw, 4.5rem);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.menu-title-wrap p {
+  margin: 8px 0 0;
+  color: #ddd;
+  font-size: 1.05rem;
+}
+
+/* BUTTONS */
 
 .menu-buttons {
   display: flex;
   gap: 14px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .menu-btn {
   border: none;
   border-radius: 14px;
-  padding: 16px 26px;
+  padding: 16px 28px;
   font-size: 1.05rem;
   font-weight: bold;
   cursor: pointer;
-  transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
+  transition: 0.18s ease;
 }
 
 .menu-btn:hover {
-  transform: translateY(-2px);
-  opacity: 0.96;
+  transform: translateY(-2px) scale(1.02);
 }
 
-.menu-btn.primary {
+.primary {
   background: #d81f26;
   color: white;
-  box-shadow: 0 0 18px rgba(216, 31, 38, 0.35);
+  box-shadow: 0 0 18px rgba(216,31,38,0.35);
 }
 
-.menu-btn.secondary {
+.secondary {
   background: #1565c0;
   color: white;
-  box-shadow: 0 0 18px rgba(21, 101, 192, 0.35);
+  box-shadow: 0 0 18px rgba(21,101,192,0.35);
 }
+
+/* LEVEL CARDS */
 
 .level-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 18px;
 }
 
 .level-card {
-  border: 1px solid rgba(255,255,255,0.14);
-  background: rgba(10, 10, 10, 0.72);
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.55);
   border-radius: 18px;
   padding: 18px;
   color: white;
@@ -95,13 +127,13 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-height: 150px;
+  min-height: 155px;
   cursor: pointer;
-  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+  transition: 0.18s ease;
 }
 
 .level-card:hover {
-  transform: translateY(-3px);
+  transform: translateY(-4px);
 }
 
 .level1:hover {
@@ -110,20 +142,20 @@ body {
 }
 
 .level2:hover {
-  border-color: #47ff73;
-  box-shadow: 0 0 18px rgba(71,255,115,0.22);
+  border-color: #49ff77;
+  box-shadow: 0 0 18px rgba(73,255,119,0.22);
 }
 
-.level-card.locked {
-  opacity: 0.60;
+.locked {
+  opacity: 0.6;
   cursor: default;
 }
 
 .level-label {
+  color: #f0b000;
   font-size: 0.85rem;
   font-weight: bold;
-  color: #f0b000;
-  letter-spacing: 0.06em;
+  letter-spacing: 1px;
 }
 
 .level-card strong {
@@ -131,18 +163,19 @@ body {
 }
 
 .level-card span:last-child {
-  color: #d4d4d4;
+  color: #ddd;
 }
 
-@media (max-width: 860px) {
+/* MOBILE */
+
+@media (max-width: 900px) {
+
   .menu-shell {
-    align-items: flex-end;
     padding: 14px;
   }
 
   .menu-panel {
-    padding: 16px;
-    border-radius: 18px;
+    padding: 18px;
   }
 
   .level-cards {
