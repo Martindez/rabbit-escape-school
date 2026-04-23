@@ -27,6 +27,8 @@ let hearts = 3;
 let maxHearts = 3;
 let gameStarted = false;
 let startTime = 0;
+let lastWarningTime = 0;
+let audioContext = null;
 
 const startScreen = document.getElementById("startScreen");
 const hud = document.getElementById("hud");
@@ -54,6 +56,7 @@ const messageText = document.getElementById("messageText");
 
 const playerToken = document.getElementById("playerToken");
 const killerToken = document.getElementById("killerToken");
+const flashOverlay = document.getElementById("flashOverlay");
 
 const startBtn = document.getElementById("startBtn");
 const restartBtn = document.getElementById("restartBtn");
@@ -69,6 +72,71 @@ roomButtons.forEach((button) => {
   });
 });
 
+function initAudio() {
+  if (!audioContext) {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (AudioCtx) {
+      audioContext = new AudioCtx();
+    }
+  }
+  if (audioContext && audioContext.state === "suspended") {
+    audioContext.resume();
+  }
+}
+
+function playTone(frequency, duration, type = "sine", volume = 0.05, fade = 0.02) {
+  if (!audioContext) return;
+
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  const now = audioContext.currentTime;
+
+  osc.type = type;
+  osc.frequency.setValueAtTime(frequency, now);
+
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(volume, now + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+  osc.connect(gain);
+  gain.connect(audioContext.destination);
+
+  osc.start(now);
+  osc.stop(now + duration + fade);
+}
+
+function playMoveSound() {
+  playTone(420, 0.09, "triangle", 0.035);
+}
+
+function playKeySound() {
+  playTone(660, 0.08, "triangle", 0.045);
+  setTimeout(() => playTone(880, 0.12, "triangle", 0.04), 70);
+}
+
+function playWarningSound() {
+  playTone(240, 0.11, "sawtooth", 0.045);
+  setTimeout(() => playTone(200, 0.11, "sawtooth", 0.04), 90);
+}
+
+function playHitSound() {
+  playTone(180, 0.12, "sawtooth", 0.06);
+  setTimeout(() => playTone(120, 0.18, "sawtooth", 0.055), 70);
+}
+
+function playWinSound() {
+  playTone(523, 0.12, "triangle", 0.05);
+  setTimeout(() => playTone(659, 0.12, "triangle", 0.05), 100);
+  setTimeout(() => playTone(784, 0.18, "triangle", 0.05), 200);
+}
+
+function flashScreen(type = "warning") {
+  if (!flashOverlay) return;
+  flashOverlay.classList.remove("active", "warning");
+  void flashOverlay.offsetWidth;
+  flashOverlay.classList.add(type);
+}
+
 function shuffle(array) {
   const arr = [...array];
   for (let i = arr.length - 1; i > 0; i -= 1) {
@@ -83,6 +151,7 @@ function assignRandomKeys() {
 }
 
 function startGame() {
+  initAudio();
   assignRandomKeys();
   playerRoom = "Playground";
   killerRoom = "Security";
@@ -90,6 +159,7 @@ function startGame() {
   hearts = maxHearts;
   gameStarted = true;
   startTime = Date.now();
+  lastWarningTime = 0;
 
   startScreen.classList.add("hidden");
   hud.classList.remove("hidden");
@@ -109,6 +179,7 @@ function resetGame() {
   hearts = maxHearts;
   gameStarted = false;
   startTime = 0;
+  lastWarningTime = 0;
 
   startScreen.classList.remove("hidden");
   hud.classList.add("hidden");
@@ -127,18 +198,22 @@ function movePlayer(targetRoom) {
   }
 
   playerRoom = targetRoom;
+  playMoveSound();
 
   if (keyRooms.includes(playerRoom) && !collectedKeys.includes(playerRoom)) {
     collectedKeys.push(playerRoom);
+    playKeySound();
 
     if (collectedKeys.length === keyRooms.length) {
       showMessage("All 4 keys collected! The Exit is OPEN!");
+      playTone(980, 0.16, "triangle", 0.05);
     } else {
       const keysLeft = keyRooms.length - collectedKeys.length;
       showMessage(`You found a key in ${playerRoom}. ${keysLeft} key left.`);
     }
   } else if (playerRoom === "Exit" && !exitIsOpen()) {
     showMessage("The Exit is locked. Collect all 4 keys first.");
+    playTone(150, 0.12, "square", 0.04);
   } else {
     showMessage(`You moved to ${playerRoom}.`);
   }
@@ -206,6 +281,8 @@ function exitIsOpen() {
 
 function playerHit() {
   hearts -= 1;
+  playHitSound();
+  flashScreen("active");
 
   if (hearts <= 0) {
     loseGame();
@@ -246,6 +323,8 @@ function winGame() {
   if (!best || totalSeconds < Number(best)) {
     localStorage.setItem("rabbitEscapeBestTime", String(totalSeconds));
   }
+
+  playWinSound();
 
   endEyebrow.textContent = "ROUND COMPLETE";
   endTitle.textContent = "You Escaped!";
@@ -358,9 +437,13 @@ function updateBoard() {
 
 function maybeShowDangerWarning() {
   const d = getDistance(playerRoom, killerRoom);
+  const now = Date.now();
 
-  if (d === 1) {
+  if (d === 1 && now - lastWarningTime > 1200) {
     showMessage("Warning: The killer is very close!");
+    playWarningSound();
+    flashScreen("warning");
+    lastWarningTime = now;
   } else if (exitIsOpen() && playerRoom !== "Exit") {
     showMessage("All keys collected! Run to the Exit!");
   }
