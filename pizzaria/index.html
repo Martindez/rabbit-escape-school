@@ -9,6 +9,12 @@
 <body>
   <div id="flashOverlay" class="flash-overlay"></div>
 
+  <div id="jumpscareOverlay" class="jumpscare-overlay hidden">
+    <div class="jumpscare-bg"></div>
+    <img src="../assets/killer.png" alt="Killer Rabbit" class="jumpscare-killer" />
+    <div class="jumpscare-text">CAUGHT!</div>
+  </div>
+
   <div class="app">
 
     <header class="topbar">
@@ -25,9 +31,9 @@
         </p>
 
         <div class="start-rules">
-          <div class="rule-pill">Click connected rooms to move</div>
-          <div class="rule-pill">5 random key rooms each round</div>
-          <div class="rule-pill">Get all keys to unlock Exit</div>
+          <div class="rule-pill">Click glowing rooms to move</div>
+          <div class="rule-pill">Only connected rooms work</div>
+          <div class="rule-pill">Collect 5 keys to unlock Exit</div>
           <div class="rule-pill">Caught 3 times = lose</div>
         </div>
 
@@ -54,11 +60,7 @@
 
     <section id="gameWrap" class="panel hidden">
       <div class="map-board">
-        <img
-          src="assets/map.jpg"
-          alt="Pizzaria map"
-          class="map-image"
-        />
+        <img src="assets/map.jpg" alt="Pizzaria map" class="map-image" />
 
         <button class="room kitchen" data-room="Kitchen" aria-label="Kitchen"></button>
         <button class="room storage" data-room="Storage" aria-label="Storage Room"></button>
@@ -70,19 +72,8 @@
         <button class="room oven" data-room="Oven" aria-label="Pizza Oven Area"></button>
         <button class="room exit-room" data-room="Exit" aria-label="Exit"></button>
 
-        <img
-          id="playerToken"
-          class="token player-token"
-          src="../assets/player.png"
-          alt="Player"
-        />
-
-        <img
-          id="killerToken"
-          class="token killer-token"
-          src="../assets/killer.png"
-          alt="Killer"
-        />
+        <img id="playerToken" class="token player-token" src="../assets/player.png" alt="Player" />
+        <img id="killerToken" class="token killer-token" src="../assets/killer.png" alt="Killer" />
       </div>
     </section>
 

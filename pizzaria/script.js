@@ -34,6 +34,7 @@ let gameStarted = false;
 let startTime = 0;
 let audioContext = null;
 let lastWarningTime = 0;
+let safeTurns = 0;
 
 const startBtn = document.getElementById("startBtn");
 const restartBtn = document.getElementById("restartBtn");
@@ -57,6 +58,7 @@ const messageText = document.getElementById("messageText");
 const goalText = document.getElementById("goalText");
 const bestTimeText = document.getElementById("bestTime");
 const flashOverlay = document.getElementById("flashOverlay");
+const jumpscareOverlay = document.getElementById("jumpscareOverlay");
 
 const endEyebrow = document.getElementById("endEyebrow");
 const endTitle = document.getElementById("endTitle");
@@ -129,19 +131,35 @@ function playWinSound() {
   setTimeout(() => playTone(784, 0.18, "triangle", 0.05), 200);
 }
 
+function playLockedSound() {
+  playTone(150, 0.12, "square", 0.04);
+}
+
 function flash(type = "warning") {
   if (!flashOverlay) return;
-
-  flashOverlay.classList.remove("flash");
-
-  if (type === "hit") {
-    flashOverlay.style.background = "rgba(255,0,0,.34)";
-  } else {
-    flashOverlay.style.background = "rgba(255,0,0,.20)";
-  }
-
+  flashOverlay.classList.remove("active", "warning");
   void flashOverlay.offsetWidth;
-  flashOverlay.classList.add("flash");
+  flashOverlay.classList.add(type);
+}
+
+function shakeScreen() {
+  document.body.classList.remove("shake");
+  void document.body.offsetWidth;
+  document.body.classList.add("shake");
+}
+
+function showJumpscare(duration = 650) {
+  if (!jumpscareOverlay) return Promise.resolve();
+
+  jumpscareOverlay.classList.remove("hidden");
+  shakeScreen();
+
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      jumpscareOverlay.classList.add("hidden");
+      resolve();
+    }, duration);
+  });
 }
 
 function shuffle(arr) {
@@ -164,6 +182,7 @@ function startGame() {
   player = "Dining";
   killer = "Storage";
   hearts = 3;
+  safeTurns = 0;
   gameStarted = true;
   startTime = Date.now();
   lastWarningTime = 0;
@@ -182,6 +201,7 @@ function resetGame() {
   player = "Dining";
   killer = "Storage";
   hearts = 3;
+  safeTurns = 0;
   keys = [];
   got = [];
   gameStarted = false;
@@ -205,6 +225,10 @@ function move(room) {
   player = room;
   playMoveSound();
 
+  if (safeTurns > 0) {
+    safeTurns -= 1;
+  }
+
   if (keys.includes(player) && !got.includes(player)) {
     got.push(player);
     playKeySound();
@@ -217,21 +241,21 @@ function move(room) {
     }
   } else if (player === "Exit" && got.length < totalKeys) {
     msg("The Exit is locked. Collect all 5 keys first.");
-    playTone(150, 0.12, "square", 0.04);
+    playLockedSound();
   } else {
     msg(`You moved to ${player}.`);
   }
 
-  if (player === killer) {
+  if (safeTurns === 0 && player === killer) {
     hit();
-    if (!gameStarted) return;
+    return;
   }
 
   moveKiller();
 
-  if (player === killer) {
+  if (safeTurns === 0 && player === killer) {
     hit();
-    if (!gameStarted) return;
+    return;
   }
 
   if (player === "Exit" && got.length === totalKeys) {
@@ -244,6 +268,10 @@ function move(room) {
 }
 
 function moveKiller() {
+  if (safeTurns > 0 && Math.random() < 0.55) {
+    return;
+  }
+
   const nextStep = shortestPath(killer, player);
 
   if (nextStep.length > 1 && Math.random() < 0.9) {
@@ -280,6 +308,8 @@ function dist(a, b) {
 }
 
 function maybeWarn() {
+  if (safeTurns > 0) return;
+
   const d = dist(player, killer);
   const now = Date.now();
 
@@ -293,10 +323,11 @@ function maybeWarn() {
   }
 }
 
-function hit() {
+async function hit() {
   hearts--;
   playHitSound();
-  flash("hit");
+  flash("active");
+  await showJumpscare();
 
   if (hearts <= 0) {
     lose();
@@ -304,7 +335,8 @@ function hit() {
   }
 
   player = "Dining";
-  msg(`Caught! You lost 1 heart. ${hearts} heart${hearts === 1 ? "" : "s"} left. Back to Dining Area.`);
+  safeTurns = 1;
+  msg(`Caught! You lost 1 heart. ${hearts} heart${hearts === 1 ? "" : "s"} left. Safe for 1 move.`);
   update();
 }
 
@@ -393,8 +425,13 @@ function update() {
   exitState.textContent = got.length === totalKeys ? "OPEN" : "Locked";
 
   const d = dist(player, killer);
-  dangerText.textContent = d <= 1 ? "High" : d === 2 ? "Medium" : "Low";
-  dangerBar.style.width = d <= 1 ? "90%" : d === 2 ? "55%" : "20%";
+  if (safeTurns > 0) {
+    dangerText.textContent = "Safe";
+    dangerBar.style.width = "12%";
+  } else {
+    dangerText.textContent = d <= 1 ? "High" : d === 2 ? "Medium" : "Low";
+    dangerBar.style.width = d <= 1 ? "90%" : d === 2 ? "55%" : "20%";
+  }
 
   updateGoal();
   updateBest();
@@ -409,7 +446,8 @@ function update() {
       "killer-room",
       "key-room",
       "exit-open",
-      "room-cleared"
+      "room-cleared",
+      "safe-turn"
     );
 
     if (room === player) {
@@ -437,6 +475,10 @@ function update() {
 
     if (room === "Exit" && got.length === totalKeys) {
       btn.classList.add("exit-open");
+    }
+
+    if (safeTurns > 0 && room === player) {
+      btn.classList.add("safe-turn");
     }
   });
 }
