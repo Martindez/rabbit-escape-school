@@ -326,6 +326,8 @@ body {
   gap: 10px;
 }
 
+/* SAFE JUMPSCARE + FLASH BLOCK */
+
 .flash-overlay {
   position: fixed;
   inset: 0;
@@ -351,6 +353,10 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+
+.jumpscare-overlay.hidden {
+  display: none;
 }
 
 .jumpscare-bg {
