@@ -445,4 +445,13 @@ body {
     width: 150px;
     height: 150px;
   }
+}.hidden-killer {
+  opacity: 0;
+}
+
+.killer-token {
+  transition:
+    top 0.45s ease,
+    left 0.45s ease,
+    opacity 0.25s ease;
 }

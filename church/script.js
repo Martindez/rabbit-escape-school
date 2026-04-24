@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const totalRelics = 6;
 
   let exitTimer = null;
+  let killerTimer = null;
   let exitTimeLeft = 5;
   let audioContext = null;
   let playerLight = null;
@@ -95,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (ui.menuBtn) {
     ui.menuBtn.addEventListener("click", () => {
       stopAllMusic();
+      clearInterval(killerTimer);
       window.location.href = "../";
     });
   }
@@ -133,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateMusicState() {
     const muted = localStorage.getItem("rabbitEscapeMuted") === "true";
     if (muted || !gameState.gameStarted || gameState.exitChallengeStarted) return;
-
     if (!ui.ambientMusic || !ui.chaseMusic) return;
 
     const connectedRooms = rooms[gameState.playerRoom] || [];
@@ -143,14 +144,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (killerNear) {
       ui.ambientMusic.pause();
-
       ui.chaseMusic.muted = false;
-      ui.chaseMusic.volume = 0.45;
+      ui.chaseMusic.volume = 0.48;
       ui.chaseMusic.play().catch(() => {});
     } else {
       ui.chaseMusic.pause();
       ui.chaseMusic.currentTime = 0;
-
       ui.ambientMusic.muted = false;
       ui.ambientMusic.volume = 0.35;
       ui.ambientMusic.play().catch(() => {});
@@ -215,7 +214,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function startGame() {
     clearInterval(exitTimer);
+    clearInterval(killerTimer);
     exitTimer = null;
+    killerTimer = null;
 
     initAudio();
     createPlayerLight();
@@ -234,10 +235,33 @@ document.addEventListener("DOMContentLoaded", () => {
     if (ui.hud) ui.hud.classList.remove("hidden");
     if (ui.gameWrap) ui.gameWrap.classList.remove("hidden");
 
-    showMessage("Collect the 6 cursed letters. Then survive the Exit test.");
+    showMessage("Collect the 6 cursed letters. The killer is hunting even when you wait.");
     updateUI();
     startAmbientMusic();
-    updateMusicState();
+    startKillerTimer();
+  }
+
+  function startKillerTimer() {
+    clearInterval(killerTimer);
+
+    let speed = 3000;
+
+    if (gameState.collectedRelics.length >= 2) speed = 2400;
+    if (gameState.collectedRelics.length >= 4) speed = 1800;
+    if (gameState.collectedRelics.length >= 5) speed = 1300;
+
+    killerTimer = setInterval(() => {
+      if (!gameState.gameStarted) return;
+      if (gameState.exitChallengeStarted) return;
+
+      moveKillerSmart();
+      checkDanger();
+      updateUI();
+
+      if (gameState.gameStarted) {
+        dangerWarning();
+      }
+    }, speed);
   }
 
   function movePlayer(room) {
@@ -274,9 +298,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     moveKillerSmart();
+
+    if (gameState.collectedRelics.length >= 4 && Math.random() < 0.35) {
+      moveKillerSmart();
+      showMessage("The church bell rings. The killer moves again.");
+    }
+
     checkDanger();
     updateUI();
-    dangerWarning();
+
+    if (gameState.gameStarted) {
+      dangerWarning();
+    }
   }
 
   function collectRelicIfNeeded() {
@@ -290,11 +323,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       playTone(740, 0.1, "triangle", 0.05);
       setTimeout(() => playTone(940, 0.12, "triangle", 0.05), 90);
+
+      startKillerTimer();
     }
   }
 
   function moveKillerSmart() {
-    const chaseChance = gameState.collectedRelics.length >= 3 ? 0.7 : 0.45;
+    const chaseChance = gameState.collectedRelics.length >= 3 ? 0.92 : 0.68;
     const path = findShortestPath(gameState.killerRoom, gameState.playerRoom);
 
     if (path.length > 1 && Math.random() < chaseChance) {
@@ -329,7 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function dangerWarning() {
-    const connectedRooms = rooms[gameState.playerRoom];
+    const connectedRooms = rooms[gameState.playerRoom] || [];
 
     if (connectedRooms.includes(gameState.killerRoom)) {
       showMessage("You hear breathing nearby...");
@@ -353,7 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (ui.ambientMusic) ui.ambientMusic.pause();
     if (ui.chaseMusic) {
-      ui.chaseMusic.volume = 0.55;
+      ui.chaseMusic.volume = 0.6;
       ui.chaseMusic.play().catch(() => {});
     }
 
@@ -402,6 +437,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function winGame() {
     gameState.gameStarted = false;
+    clearInterval(killerTimer);
     stopAllMusic();
 
     ui.codeOverlay.classList.add("hidden");
@@ -414,6 +450,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function loseGame() {
     gameState.gameStarted = false;
+    clearInterval(killerTimer);
     stopAllMusic();
 
     ui.endTitle.textContent = "Caught!";
@@ -430,15 +467,31 @@ document.addEventListener("DOMContentLoaded", () => {
     ui.keyCount.textContent = gameState.collectedRelics.length;
     ui.hearts.textContent = gameState.hearts > 0 ? "❤️" : "💔";
     ui.playerRoom.textContent = gameState.playerRoom;
-    ui.killerRoom.textContent = gameState.killerRoom;
+    ui.killerRoom.textContent = "Unknown";
     ui.exitState.textContent =
       gameState.collectedRelics.length >= totalRelics ? "Code Required" : "Sealed";
     ui.lettersText.textContent = getRevealedWordDisplay();
 
     moveToken(ui.playerToken, gameState.playerRoom);
-    moveToken(ui.killerToken, gameState.killerRoom);
+    updateHiddenKiller();
     moveLight(gameState.playerRoom);
     updateMusicState();
+  }
+
+  function updateHiddenKiller() {
+    if (!ui.killerToken) return;
+
+    const connectedRooms = rooms[gameState.playerRoom] || [];
+    const killerNear =
+      connectedRooms.includes(gameState.killerRoom) ||
+      gameState.playerRoom === gameState.killerRoom;
+
+    if (killerNear) {
+      ui.killerToken.classList.remove("hidden-killer");
+      moveToken(ui.killerToken, gameState.killerRoom);
+    } else {
+      ui.killerToken.classList.add("hidden-killer");
+    }
   }
 
   function getRevealedWordDisplay() {
