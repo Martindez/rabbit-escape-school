@@ -73,15 +73,21 @@ const ui = {
   roomButtons: document.querySelectorAll(".room-hotspot")
 };
 
-ui.restartBtn.addEventListener("click", startGame);
+if (ui.restartBtn) {
+  ui.restartBtn.addEventListener("click", startGame);
+}
 
-ui.nextLevelBtn.addEventListener("click", () => {
-  window.location.href = "../edderkoppen/";
-});
+if (ui.nextLevelBtn) {
+  ui.nextLevelBtn.addEventListener("click", () => {
+    window.location.href = "../edderkoppen/";
+  });
+}
 
-ui.menuBtn.addEventListener("click", () => {
-  window.location.href = "../";
-});
+if (ui.menuBtn) {
+  ui.menuBtn.addEventListener("click", () => {
+    window.location.href = "../";
+  });
+}
 
 ui.roomButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -117,7 +123,8 @@ function playJumpscareSound() {
 }
 
 function createPlayerLight() {
-  if (playerLight) return;
+  if (playerLight || !ui.mapBoard) return;
+
   playerLight = document.createElement("div");
   playerLight.className = "player-light";
   ui.mapBoard.appendChild(playerLight);
@@ -166,10 +173,10 @@ function startGame() {
     gameStarted: true
   };
 
-  ui.endScreen.classList.add("hidden");
-  ui.hud.classList.remove("hidden");
-  ui.gameWrap.classList.remove("hidden");
-  ui.nextLevelBtn.classList.add("hidden");
+  if (ui.endScreen) ui.endScreen.classList.add("hidden");
+  if (ui.hud) ui.hud.classList.remove("hidden");
+  if (ui.gameWrap) ui.gameWrap.classList.remove("hidden");
+  if (ui.nextLevelBtn) ui.nextLevelBtn.classList.add("hidden");
 
   showMessage("Find all 5 keys, then go to the Exit.");
   updateUI();
@@ -232,12 +239,12 @@ function checkWin() {
   if (gameState.playerRoom === "Exit" && gameState.collectedKeys.length >= totalKeys) {
     gameState.gameStarted = false;
 
-    ui.endTitle.textContent = "You Escaped!";
-    ui.endText.textContent = "You escaped the pizzaria. Next stop: Edderkoppen.";
-    ui.nextLevelBtn.classList.remove("hidden");
-    ui.hud.classList.add("hidden");
-    ui.gameWrap.classList.add("hidden");
-    ui.endScreen.classList.remove("hidden");
+    if (ui.endTitle) ui.endTitle.textContent = "You Escaped!";
+    if (ui.endText) ui.endText.textContent = "You escaped the pizzaria. Next stop: Edderkoppen.";
+    if (ui.nextLevelBtn) ui.nextLevelBtn.classList.remove("hidden");
+    if (ui.hud) ui.hud.classList.add("hidden");
+    if (ui.gameWrap) ui.gameWrap.classList.add("hidden");
+    if (ui.endScreen) ui.endScreen.classList.remove("hidden");
 
     playTone(523, 0.12, "triangle", 0.05);
     setTimeout(() => playTone(659, 0.12, "triangle", 0.05), 120);
@@ -249,24 +256,25 @@ function loseGame() {
   gameState.gameStarted = false;
   stopAmbientMusic();
 
-  ui.endTitle.textContent = "Caught!";
-  ui.endText.textContent = "The killer rabbit found you.";
-  ui.nextLevelBtn.classList.add("hidden");
-  ui.hud.classList.add("hidden");
-  ui.gameWrap.classList.add("hidden");
+  if (ui.endTitle) ui.endTitle.textContent = "Caught!";
+  if (ui.endText) ui.endText.textContent = "The killer rabbit found you.";
+  if (ui.nextLevelBtn) ui.nextLevelBtn.classList.add("hidden");
+  if (ui.hud) ui.hud.classList.add("hidden");
+  if (ui.gameWrap) ui.gameWrap.classList.add("hidden");
 
   setTimeout(() => {
-    ui.endScreen.classList.remove("hidden");
+    if (ui.endScreen) ui.endScreen.classList.remove("hidden");
   }, 900);
 }
 
 function updateUI() {
-  ui.keyCount.textContent = gameState.collectedKeys.length;
-  ui.hearts.textContent = gameState.hearts > 0 ? "❤️" : "💔";
-  ui.playerRoom.textContent = gameState.playerRoom;
-  ui.killerRoom.textContent = gameState.killerRoom;
-  ui.exitState.textContent =
-    gameState.collectedKeys.length >= totalKeys ? "Open" : "Locked";
+  if (ui.keyCount) ui.keyCount.textContent = gameState.collectedKeys.length;
+  if (ui.hearts) ui.hearts.textContent = gameState.hearts > 0 ? "❤️" : "💔";
+  if (ui.playerRoom) ui.playerRoom.textContent = gameState.playerRoom;
+  if (ui.killerRoom) ui.killerRoom.textContent = gameState.killerRoom;
+  if (ui.exitState) {
+    ui.exitState.textContent = gameState.collectedKeys.length >= totalKeys ? "Open" : "Locked";
+  }
 
   moveToken(ui.playerToken, gameState.playerRoom);
   moveToken(ui.killerToken, gameState.killerRoom);
@@ -275,6 +283,8 @@ function updateUI() {
 }
 
 function moveToken(token, room) {
+  if (!token) return;
+
   const pos = roomPositions[room];
   token.style.top = `${pos.top}%`;
   token.style.left = `${pos.left}%`;
@@ -296,6 +306,8 @@ function moveLight(room) {
 }
 
 function drawKeys() {
+  if (!ui.keyLayer) return;
+
   ui.keyLayer.innerHTML = "";
 
   gameState.keyRooms.forEach((room) => {
@@ -311,16 +323,20 @@ function drawKeys() {
 }
 
 function showMessage(text) {
-  ui.messageText.textContent = text;
+  if (ui.messageText) ui.messageText.textContent = text;
 }
 
 function flash() {
+  if (!ui.flashOverlay) return;
+
   ui.flashOverlay.classList.remove("active");
   void ui.flashOverlay.offsetWidth;
   ui.flashOverlay.classList.add("active");
 }
 
 function showJumpscare() {
+  if (!ui.jumpscareOverlay) return;
+
   ui.jumpscareOverlay.classList.remove("hidden");
   setTimeout(() => {
     ui.jumpscareOverlay.classList.add("hidden");
