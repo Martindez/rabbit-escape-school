@@ -10,57 +10,62 @@ body {
   background: black;
 }
 
+/* FULL MENU SCREEN */
 .menu-screen {
   width: 100vw;
   height: 100vh;
-  background-image: url("assets/menu-bg-clean.jpg");
+  background-image: url("assets/menu-bg-clean.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
 }
 
-/* Buttons placed under the title area */
+/* BUTTON AREA */
 .menu-buttons {
   position: absolute;
   left: 50%;
-  top: 70%;
+  bottom: 45px;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   align-items: center;
 }
 
+/* BUTTON STYLE */
 .menu-buttons button {
-  width: 250px;
-  padding: 14px 0;
-  background: rgba(0, 0, 0, 0.55);
+  width: 240px;
+  padding: 12px 0;
+  background: rgba(0, 0, 0, 0.72);
   color: white;
-  border: 2px solid rgba(180, 0, 0, 0.8);
+  border: 2px solid rgba(180, 0, 0, 0.95);
   border-radius: 6px;
-  font-size: 22px;
+  font-size: 20px;
   letter-spacing: 3px;
   cursor: pointer;
   text-shadow: 0 0 8px red;
-  box-shadow: 0 0 12px rgba(180, 0, 0, 0.35);
-  transition: 0.2s;
+  box-shadow: 0 0 12px rgba(180, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  transition: all 0.2s ease;
 }
 
+/* HOVER EFFECT */
 .menu-buttons button:hover {
-  background: rgba(120, 0, 0, 0.75);
+  background: rgba(120, 0, 0, 0.8);
   transform: scale(1.05);
-  box-shadow: 0 0 22px rgba(255, 0, 0, 0.7);
+  box-shadow: 0 0 24px rgba(255, 0, 0, 0.8);
 }
 
-/* Makes it work better on small screens */
+/* MOBILE SUPPORT */
 @media (max-width: 800px) {
   .menu-buttons {
-    top: 68%;
+    bottom: 30px;
   }
 
   .menu-buttons button {
     width: 210px;
     font-size: 18px;
+    padding: 10px 0;
   }
 }
