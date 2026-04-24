@@ -101,6 +101,7 @@ body {
   margin-left: 6px;
 }
 
+/* MAP */
 .map-board {
   position: relative;
   width: 100%;
@@ -111,6 +112,20 @@ body {
   border-radius: 18px;
   background: #000;
   touch-action: manipulation;
+  box-shadow:
+    0 0 25px rgba(0, 0, 0, 0.9),
+    0 0 35px rgba(120, 0, 0, 0.25);
+}
+
+.map-board::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at center, transparent 45%, rgba(0, 0, 0, 0.42) 100%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.28));
 }
 
 .map-image {
@@ -122,6 +137,7 @@ body {
   pointer-events: none;
 }
 
+/* HITBOXES */
 .room-hotspot {
   position: absolute;
   border: 0;
@@ -133,7 +149,6 @@ body {
   touch-action: manipulation;
 }
 
-/* CHURCH HITBOXES */
 .room-hotspot.bell-tower {
   top: 2%;
   left: 39%;
@@ -197,6 +212,7 @@ body {
   height: 12%;
 }
 
+/* PLAYER LIGHT */
 .player-light {
   position: absolute;
   width: 190px;
@@ -218,6 +234,7 @@ body {
   animation: flashlightPulse 2.2s infinite alternate;
 }
 
+/* TOKENS */
 .token {
   position: absolute;
   object-fit: contain;
@@ -253,6 +270,7 @@ body {
     filter 0.35s ease;
 }
 
+/* KILLER STEALTH */
 .hidden-killer {
   opacity: 0;
   filter: blur(10px);
@@ -271,6 +289,7 @@ body {
   animation: killerMovePop 0.35s ease;
 }
 
+/* OVERLAYS */
 .flash-overlay {
   position: fixed;
   inset: 0;
@@ -309,6 +328,7 @@ body {
   text-shadow: 0 0 20px black;
 }
 
+/* CODE CHALLENGE */
 .code-overlay {
   position: fixed;
   inset: 0;
@@ -365,6 +385,7 @@ body {
   min-height: 22px;
 }
 
+/* ANIMATIONS */
 @keyframes flashlightPulse {
   from {
     opacity: 0.65;
@@ -429,6 +450,7 @@ body {
   to { transform: scale(1.08); }
 }
 
+/* MOBILE */
 @media (max-width: 700px) {
   .app {
     padding: 6px;
