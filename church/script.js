@@ -301,11 +301,11 @@ document.addEventListener("DOMContentLoaded", () => {
   function startKillerTimer() {
     clearInterval(killerTimer);
 
-    let speed = 4500;
+    let speed = 6000;
 
-    if (gameState.collectedRelics.length >= 2) speed = 3800;
-    if (gameState.collectedRelics.length >= 4) speed = 3000;
-    if (gameState.collectedRelics.length >= 5) speed = 2400;
+    if (gameState.collectedRelics.length >= 2) speed = 5000;
+    if (gameState.collectedRelics.length >= 4) speed = 4000;
+    if (gameState.collectedRelics.length >= 5) speed = 3200;
 
     killerTimer = setInterval(() => {
       if (!gameState.gameStarted) return;
