@@ -22,27 +22,50 @@ const roomPositions = {
   Exit: { top: 92, left: 50 }
 };
 
-const possibleKeyRooms = [
+const relicPositions = {
+  "Bell Tower": { top: 21, left: 50 },
+  Storage: { top: 42, left: 24 },
+  "Main Hall": { top: 45, left: 50 },
+  Confession: { top: 42, left: 76 },
+  Altar: { top: 62, left: 50 },
+  Entrance: { top: 78, left: 24 },
+  Basement: { top: 80, left: 50 },
+  Graveyard: { top: 79, left: 77 }
+};
+
+const secretWord = "INSANE";
+
+const relicRooms = [
   "Bell Tower",
   "Storage",
+  "Main Hall",
   "Confession",
   "Altar",
-  "Entrance",
-  "Basement",
   "Graveyard"
 ];
 
-const totalKeys = 6;
+const relicLetters = {
+  "Bell Tower": "I",
+  Storage: "N",
+  "Main Hall": "S",
+  Confession: "A",
+  Altar: "N",
+  Graveyard: "E"
+};
+
+const totalRelics = 6;
 
 let moveMode = "sneak";
+let exitTimer = null;
+let exitTimeLeft = 5;
 
 let gameState = {
   playerRoom: "Entrance",
   killerRoom: "Bell Tower",
-  keyRooms: [],
-  collectedKeys: [],
+  collectedRelics: [],
   hearts: 1,
   turnCount: 0,
+  exitChallengeStarted: false,
   gameStarted: false
 };
 
@@ -74,7 +97,13 @@ const ui = {
   roomButtons: document.querySelectorAll(".room-hotspot"),
   sneakBtn: document.getElementById("sneakBtn"),
   runBtn: document.getElementById("runBtn"),
-  moveModeText: document.getElementById("moveModeText")
+  moveModeText: document.getElementById("moveModeText"),
+  lettersText: document.getElementById("lettersText"),
+  codeOverlay: document.getElementById("codeOverlay"),
+  timerText: document.getElementById("timerText"),
+  codeInput: document.getElementById("codeInput"),
+  submitCodeBtn: document.getElementById("submitCodeBtn"),
+  codeHint: document.getElementById("codeHint")
 };
 
 ui.restartBtn.addEventListener("click", startGame);
@@ -83,12 +112,13 @@ ui.menuBtn.addEventListener("click", () => {
   window.location.href = "../";
 });
 
-ui.sneakBtn.addEventListener("click", () => {
-  setMoveMode("sneak");
-});
+ui.sneakBtn.addEventListener("click", () => setMoveMode("sneak"));
+ui.runBtn.addEventListener("click", () => setMoveMode("run"));
 
-ui.runBtn.addEventListener("click", () => {
-  setMoveMode("run");
+ui.submitCodeBtn.addEventListener("click", submitExitCode);
+
+ui.codeInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") submitExitCode();
 });
 
 ui.roomButtons.forEach((button) => {
@@ -109,8 +139,8 @@ function setMoveMode(mode) {
 
   showMessage(
     mode === "sneak"
-      ? "Sneak mode: quieter, but the killer still moves."
-      : "Run mode: loud. The killer becomes more aggressive."
+      ? "Sneak mode: quieter, but slower tension."
+      : "Run mode: loud. The killer becomes aggressive."
   );
 }
 
@@ -176,6 +206,9 @@ function playTone(frequency, duration, type = "sine", volume = 0.04) {
 }
 
 function startGame() {
+  clearInterval(exitTimer);
+  exitTimer = null;
+
   initAudio();
   startAmbientMusic();
   createPlayerLight();
@@ -184,23 +217,24 @@ function startGame() {
   gameState = {
     playerRoom: "Entrance",
     killerRoom: "Bell Tower",
-    keyRooms: shuffle([...possibleKeyRooms]).slice(0, totalKeys),
-    collectedKeys: [],
+    collectedRelics: [],
     hearts: 1,
     turnCount: 0,
+    exitChallengeStarted: false,
     gameStarted: true
   };
 
+  ui.codeOverlay.classList.add("hidden");
   ui.endScreen.classList.add("hidden");
   ui.hud.classList.remove("hidden");
   ui.gameWrap.classList.remove("hidden");
 
-  showMessage("Hardmode: Find 6 keys. Sneak or run carefully.");
+  showMessage("Collect the 6 cursed letters. The Exit will test you.");
   updateUI();
 }
 
 function movePlayer(room) {
-  if (!gameState.gameStarted) return;
+  if (!gameState.gameStarted || gameState.exitChallengeStarted) return;
 
   const connectedRooms = rooms[gameState.playerRoom];
 
@@ -210,8 +244,8 @@ function movePlayer(room) {
     return;
   }
 
-  if (room === "Exit" && gameState.collectedKeys.length < totalKeys) {
-    showMessage("The Exit is locked. Find all 6 keys first.");
+  if (room === "Exit" && gameState.collectedRelics.length < totalRelics) {
+    showMessage("The Exit is sealed. Find every cursed letter first.");
     playTone(130, 0.15, "square", 0.03);
     return;
   }
@@ -221,7 +255,13 @@ function movePlayer(room) {
 
   playTone(moveMode === "run" ? 560 : 390, 0.08, "triangle", 0.035);
 
-  collectKeyIfNeeded();
+  collectRelicIfNeeded();
+
+  if (room === "Exit" && gameState.collectedRelics.length >= totalRelics) {
+    updateUI();
+    startExitChallenge();
+    return;
+  }
 
   if (moveMode === "sneak") {
     moveKillerSmart(0.45);
@@ -234,26 +274,95 @@ function movePlayer(room) {
     }
   }
 
-  if (gameState.collectedKeys.length >= 4 && Math.random() < 0.35) {
+  if (gameState.collectedRelics.length >= 4 && Math.random() < 0.35) {
     moveKillerSmart(0.8);
     showMessage("The church bell rings. The killer moves again.");
   }
 
   checkDanger();
-  checkWin();
   updateUI();
   dangerWarning();
 }
 
-function collectKeyIfNeeded() {
+function collectRelicIfNeeded() {
   const room = gameState.playerRoom;
 
-  if (gameState.keyRooms.includes(room) && !gameState.collectedKeys.includes(room)) {
-    gameState.collectedKeys.push(room);
-    showMessage(`You found a key in ${room}!`);
+  if (relicRooms.includes(room) && !gameState.collectedRelics.includes(room)) {
+    gameState.collectedRelics.push(room);
+
+    const letter = relicLetters[room];
+    showMessage(`The relic whispers: "${letter}"`);
+
     playTone(740, 0.1, "triangle", 0.05);
     setTimeout(() => playTone(940, 0.12, "triangle", 0.05), 90);
   }
+}
+
+function startExitChallenge() {
+  gameState.exitChallengeStarted = true;
+  exitTimeLeft = 5;
+
+  ui.codeOverlay.classList.remove("hidden");
+  ui.codeInput.value = "";
+  ui.codeHint.textContent = `Letters found: ${getRevealedWordDisplay()}`;
+  ui.timerText.textContent = exitTimeLeft;
+
+  setTimeout(() => ui.codeInput.focus(), 100);
+
+  playTone(90, 0.25, "sawtooth", 0.05);
+
+  exitTimer = setInterval(() => {
+    exitTimeLeft--;
+    ui.timerText.textContent = exitTimeLeft;
+
+    playTone(80 + exitTimeLeft * 20, 0.08, "sawtooth", 0.04);
+
+    if (exitTimeLeft <= 0) {
+      clearInterval(exitTimer);
+      failExitChallenge("Too slow. The church seals your fate.");
+    }
+  }, 1000);
+}
+
+function submitExitCode() {
+  if (!gameState.exitChallengeStarted) return;
+
+  const answer = ui.codeInput.value.trim().toUpperCase();
+
+  if (answer === secretWord) {
+    clearInterval(exitTimer);
+    winGame();
+  } else {
+    failExitChallenge("Wrong word. The killer heard you.");
+  }
+}
+
+function failExitChallenge(text) {
+  clearInterval(exitTimer);
+  ui.codeHint.textContent = text;
+
+  setTimeout(() => {
+    ui.codeOverlay.classList.add("hidden");
+    gameState.killerRoom = "Exit";
+    checkDanger();
+    loseGame();
+  }, 500);
+}
+
+function winGame() {
+  gameState.gameStarted = false;
+  stopAmbientMusic();
+
+  ui.codeOverlay.classList.add("hidden");
+  ui.endTitle.textContent = "FINAL BOSS COMPLETE!";
+  ui.endText.textContent = "You solved the church word and escaped Still Insane.";
+  ui.hud.classList.add("hidden");
+  ui.gameWrap.classList.add("hidden");
+  ui.endScreen.classList.remove("hidden");
+
+  playTone(523, 0.12, "triangle", 0.05);
+  setTimeout(() => playTone(659, 0.12, "triangle", 0.05), 120);
+  setTimeout(() => playTone(784, 0.18, "triangle", 0.05), 240);
 }
 
 function moveKillerSmart(chaseChance) {
@@ -307,23 +416,6 @@ function checkDanger() {
   }
 }
 
-function checkWin() {
-  if (gameState.playerRoom === "Exit" && gameState.collectedKeys.length >= totalKeys) {
-    gameState.gameStarted = false;
-    stopAmbientMusic();
-
-    ui.endTitle.textContent = "HARDMODE COMPLETE!";
-    ui.endText.textContent = "You survived the Church.";
-    ui.hud.classList.add("hidden");
-    ui.gameWrap.classList.add("hidden");
-    ui.endScreen.classList.remove("hidden");
-
-    playTone(523, 0.12, "triangle", 0.05);
-    setTimeout(() => playTone(659, 0.12, "triangle", 0.05), 120);
-    setTimeout(() => playTone(784, 0.18, "triangle", 0.05), 240);
-  }
-}
-
 function loseGame() {
   gameState.gameStarted = false;
   stopAmbientMusic();
@@ -339,16 +431,23 @@ function loseGame() {
 }
 
 function updateUI() {
-  ui.keyCount.textContent = gameState.collectedKeys.length;
+  ui.keyCount.textContent = gameState.collectedRelics.length;
   ui.hearts.textContent = gameState.hearts > 0 ? "❤️" : "💔";
   ui.playerRoom.textContent = gameState.playerRoom;
   ui.killerRoom.textContent = gameState.killerRoom;
-  ui.exitState.textContent = gameState.collectedKeys.length >= totalKeys ? "Open" : "Locked";
+  ui.exitState.textContent = gameState.collectedRelics.length >= totalRelics ? "Code Required" : "Sealed";
+  ui.lettersText.textContent = getRevealedWordDisplay();
 
   moveToken(ui.playerToken, gameState.playerRoom);
   moveToken(ui.killerToken, gameState.killerRoom);
   moveLight(gameState.playerRoom);
-  drawKeys();
+  drawRelics();
+}
+
+function getRevealedWordDisplay() {
+  return relicRooms
+    .map((room) => gameState.collectedRelics.includes(room) ? relicLetters[room] : "_")
+    .join(" ");
 }
 
 function moveToken(token, room) {
@@ -377,20 +476,20 @@ function moveLight(room) {
   }, 80);
 }
 
-function drawKeys() {
+function drawRelics() {
   ui.keyLayer.innerHTML = "";
 
-  gameState.keyRooms.forEach((room) => {
-    if (gameState.collectedKeys.includes(room)) return;
+  relicRooms.forEach((room) => {
+    if (gameState.collectedRelics.includes(room)) return;
 
-    const pos = roomPositions[room];
-    const key = document.createElement("div");
+    const pos = relicPositions[room];
+    const relic = document.createElement("div");
 
-    key.className = "map-key";
-    key.style.top = `${pos.top + 5}%`;
-    key.style.left = `${pos.left + 5}%`;
+    relic.className = "church-relic";
+    relic.style.top = `${pos.top}%`;
+    relic.style.left = `${pos.left}%`;
 
-    ui.keyLayer.appendChild(key);
+    ui.keyLayer.appendChild(relic);
   });
 }
 
@@ -410,10 +509,6 @@ function showJumpscare() {
   setTimeout(() => {
     ui.jumpscareOverlay.classList.add("hidden");
   }, 900);
-}
-
-function shuffle(array) {
-  return array.sort(() => Math.random() - 0.5);
 }
 
 startGame();

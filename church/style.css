@@ -111,6 +111,19 @@ body {
   box-shadow: 0 0 14px rgba(255, 0, 0, 0.5);
 }
 
+.letters-panel {
+  margin-top: 12px;
+  text-align: center;
+  color: #ddd;
+}
+
+#lettersText {
+  color: #ffd66b;
+  font-weight: 900;
+  letter-spacing: 5px;
+  margin-left: 6px;
+}
+
 .map-board {
   position: relative;
   width: 100%;
@@ -235,15 +248,41 @@ body {
   pointer-events: none;
 }
 
-.map-key {
+.church-relic {
   position: absolute;
   transform: translate(-50%, -50%);
-  width: clamp(13px, 2.1vw, 22px);
-  height: clamp(13px, 2.1vw, 22px);
+  width: clamp(25px, 3.2vw, 38px);
+  height: clamp(25px, 3.2vw, 38px);
+  z-index: 6;
+  pointer-events: none;
+}
+
+.church-relic::before {
+  content: "✦";
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #ffd66b;
+  font-size: clamp(22px, 3vw, 34px);
+  text-shadow:
+    0 0 6px #ffd66b,
+    0 0 14px rgba(255, 170, 0, 0.9),
+    0 0 24px rgba(255, 70, 0, 0.55);
+  animation: relicFloat 1.3s ease-in-out infinite alternate;
+}
+
+.church-relic::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 70%;
+  width: 36px;
+  height: 10px;
+  transform: translateX(-50%);
   border-radius: 50%;
-  background: radial-gradient(circle, #fff7a8, #ffd13b, #9b6500);
-  box-shadow: 0 0 12px #ffd13b, 0 0 24px #ffd13b;
-  animation: pulse 0.9s infinite alternate;
+  background: rgba(255, 180, 40, 0.2);
+  filter: blur(6px);
 }
 
 .token {
@@ -320,6 +359,62 @@ body {
   text-shadow: 0 0 20px black;
 }
 
+.code-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: rgba(0, 0, 0, 0.92);
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.code-box {
+  width: min(520px, 100%);
+  background: #111;
+  border: 2px solid #d81f26;
+  border-radius: 18px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 0 35px rgba(255, 0, 0, 0.45);
+}
+
+.code-box h2 {
+  color: #ff2b33;
+  margin-top: 0;
+}
+
+.timer-text {
+  font-size: clamp(3rem, 14vw, 6rem);
+  color: #ffd66b;
+  font-weight: 900;
+  text-shadow: 0 0 20px red;
+  margin: 10px 0;
+}
+
+.code-input {
+  width: 100%;
+  padding: 14px;
+  font-size: 22px;
+  text-align: center;
+  border-radius: 12px;
+  border: 2px solid #555;
+  background: #050505;
+  color: white;
+  text-transform: uppercase;
+  outline: none;
+}
+
+.code-input:focus {
+  border-color: #ffd66b;
+  box-shadow: 0 0 18px rgba(255, 214, 107, 0.4);
+}
+
+.code-hint {
+  color: #ccc;
+  min-height: 22px;
+}
+
 @keyframes flashlightPulse {
   from {
     opacity: 0.65;
@@ -329,6 +424,18 @@ body {
   to {
     opacity: 0.95;
     transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+@keyframes relicFloat {
+  from {
+    opacity: 0.8;
+    transform: translateY(0) scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.08);
   }
 }
 
@@ -356,16 +463,6 @@ body {
   0% { scale: 1; rotate: 0deg; }
   50% { scale: 1.18; rotate: -3deg; }
   100% { scale: 1; rotate: 0deg; }
-}
-
-@keyframes pulse {
-  from {
-    transform: translate(-50%, -50%) scale(1);
-  }
-
-  to {
-    transform: translate(-50%, -50%) scale(1.25);
-  }
 }
 
 @keyframes flash {

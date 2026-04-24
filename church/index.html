@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Still Insane - Church</title>
+  <title>Still Insane - Church Final Boss</title>
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
@@ -17,19 +17,30 @@
     <div class="jumpscare-text">CAUGHT!</div>
   </div>
 
+  <div id="codeOverlay" class="code-overlay hidden">
+    <div class="code-box">
+      <h2>THE EXIT DEMANDS A WORD</h2>
+      <p>Type the secret word before the bell stops ringing.</p>
+      <div id="timerText" class="timer-text">5</div>
+      <input id="codeInput" class="code-input" type="text" autocomplete="off" placeholder="Type the word..." />
+      <button id="submitCodeBtn" class="main-btn" type="button">SUBMIT</button>
+      <p id="codeHint" class="code-hint"></p>
+    </div>
+  </div>
+
   <main class="app">
     <header class="topbar">
       <h1>Still Insane</h1>
-      <p>Level 4 · Church Hardmode</p>
+      <p>Level 4 · Church Final Boss</p>
     </header>
 
     <section id="hud" class="panel">
       <div class="hud-grid">
-        <div><strong>Keys:</strong> <span id="keyCount">0</span>/6</div>
+        <div><strong>Relics:</strong> <span id="keyCount">0</span>/6</div>
         <div><strong>Mode:</strong> <span id="moveModeText">Sneak</span></div>
         <div><strong>Player:</strong> <span id="playerRoom">Entrance</span></div>
         <div><strong>Killer:</strong> <span id="killerRoom">Bell Tower</span></div>
-        <div><strong>Exit:</strong> <span id="exitState">Locked</span></div>
+        <div><strong>Exit:</strong> <span id="exitState">Sealed</span></div>
       </div>
 
       <div class="mode-buttons">
@@ -37,7 +48,12 @@
         <button id="runBtn" class="mode-btn" type="button">RUN</button>
       </div>
 
-      <p id="messageText" class="message">Sneak is safer. Run is faster, but louder.</p>
+      <div class="letters-panel">
+        <strong>Revealed letters:</strong>
+        <span id="lettersText">_ _ _ _ _ _</span>
+      </div>
+
+      <p id="messageText" class="message">Collect 6 cursed letters. Then survive the Exit test.</p>
     </section>
 
     <section id="gameWrap" class="panel">
