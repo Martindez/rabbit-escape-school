@@ -591,12 +591,25 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateHiddenKiller() {
     if (!ui.killerToken) return;
 
-    if (isKillerNear()) {
-      ui.killerToken.classList.remove("hidden-killer");
+    const connectedRooms = rooms[gameState.playerRoom] || [];
+    const killerSameRoom = gameState.playerRoom === gameState.killerRoom;
+    const killerNear = connectedRooms.includes(gameState.killerRoom);
+
+    if (killerSameRoom) {
+      ui.killerToken.classList.remove("hidden-killer", "semi-hidden-killer");
       moveToken(ui.killerToken, gameState.killerRoom);
-    } else {
-      ui.killerToken.classList.add("hidden-killer");
+      return;
     }
+
+    if (killerNear) {
+      ui.killerToken.classList.remove("hidden-killer");
+      ui.killerToken.classList.add("semi-hidden-killer");
+      moveToken(ui.killerToken, gameState.killerRoom);
+      return;
+    }
+
+    ui.killerToken.classList.remove("semi-hidden-killer");
+    ui.killerToken.classList.add("hidden-killer");
   }
 
   function getRevealedWordDisplay() {
