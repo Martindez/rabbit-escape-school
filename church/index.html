@@ -9,6 +9,8 @@
 <body>
   <audio id="ambientMusic" src="../assets/church-ambient.mp3" loop preload="auto"></audio>
   <audio id="chaseMusic" src="../assets/church-chase.mp3" loop preload="auto"></audio>
+  <audio id="laughterSound" src="../assets/laughter.mp3" preload="auto"></audio>
+  <audio id="footstepsSound" src="../assets/footsteps.mp3" preload="auto"></audio>
   <audio id="jumpscareSound" src="../assets/jumpscare.mp3" preload="auto"></audio>
 
   <div id="flashOverlay" class="flash-overlay"></div>
@@ -40,7 +42,7 @@
         <div><strong>Relics:</strong> <span id="keyCount">0</span>/6</div>
         <div><strong>Hearts:</strong> <span id="hearts">❤️</span></div>
         <div><strong>Player:</strong> <span id="playerRoom">Entrance</span></div>
-        <div><strong>Killer:</strong> <span id="killerRoom">Bell Tower</span></div>
+        <div><strong>Killer:</strong> <span id="killerRoom">Unknown</span></div>
         <div><strong>Exit:</strong> <span id="exitState">Sealed</span></div>
       </div>
 
@@ -49,7 +51,7 @@
         <span id="lettersText">_ _ _ _ _ _</span>
       </div>
 
-      <p id="messageText" class="message">Collect 6 cursed letters. Then survive the Exit test.</p>
+      <p id="messageText" class="message">Collect 6 cursed letters. The killer hunts even when you wait.</p>
     </section>
 
     <section id="gameWrap" class="panel">
@@ -66,10 +68,8 @@
         <button class="room-hotspot graveyard" data-room="Graveyard" type="button"></button>
         <button class="room-hotspot exit-room" data-room="Exit" type="button"></button>
 
-        <div id="keyLayer" class="key-layer"></div>
-
         <img id="playerToken" class="token player-token" src="../assets/player.png" alt="Player" />
-        <img id="killerToken" class="token killer-token" src="../assets/killer.png" alt="Killer" />
+        <img id="killerToken" class="token killer-token hidden-killer" src="../assets/killer.png" alt="Killer" />
       </div>
     </section>
 
