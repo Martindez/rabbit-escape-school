@@ -116,12 +116,13 @@ body {
   border-radius: 999px;
 }
 
-.room-hotspot.electrical { top: 18%; left: 20%; width: 13%; height: 10%; }
-.room-hotspot.gym { top: 18%; left: 50%; width: 13%; height: 10%; }
-.room-hotspot.kitchen { top: 18%; left: 80%; width: 13%; height: 10%; }
-.room-hotspot.security { top: 57%; left: 14%; width: 13%; height: 10%; }
-.room-hotspot.playground { top: 58%; left: 50%; width: 16%; height: 11%; }
-.room-hotspot.exit-room { top: 83%; left: 50%; width: 12%; height: 10%; }
+/* Centered on each school room */
+.room-hotspot.electrical { top: 20%; left: 19%; width: 14%; height: 12%; }
+.room-hotspot.gym { top: 20%; left: 50%; width: 15%; height: 12%; }
+.room-hotspot.kitchen { top: 20%; left: 81%; width: 14%; height: 12%; }
+.room-hotspot.security { top: 58%; left: 18%; width: 14%; height: 12%; }
+.room-hotspot.playground { top: 59%; left: 50%; width: 18%; height: 13%; }
+.room-hotspot.exit-room { top: 82%; left: 50%; width: 13%; height: 11%; }
 
 .room-ring {
   position: absolute;
@@ -137,12 +138,13 @@ body {
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.35);
 }
 
-.electrical-ring { top: 18%; left: 20%; }
-.gym-ring { top: 18%; left: 50%; }
-.kitchen-ring { top: 18%; left: 80%; }
-.security-ring { top: 57%; left: 14%; }
-.playground-ring { top: 58%; left: 50%; }
-.exit-ring { top: 83%; left: 50%; }
+/* Dot positions centered on each school room */
+.electrical-ring { top: 20%; left: 19%; }
+.gym-ring { top: 20%; left: 50%; }
+.kitchen-ring { top: 20%; left: 81%; }
+.security-ring { top: 58%; left: 18%; }
+.playground-ring { top: 59%; left: 50%; }
+.exit-ring { top: 82%; left: 50%; }
 
 .room-ring.connected {
   opacity: 1;
