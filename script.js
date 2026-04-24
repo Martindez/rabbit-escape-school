@@ -3,41 +3,34 @@
   const ambientToggle = document.getElementById("ambientToggle");
   const STORAGE_KEY = "rabbitEscapeMenuAmbient";
 
-  function saveAmbientState(isOn) {
-    try {
-      localStorage.setItem(STORAGE_KEY, isOn ? "on" : "off");
-    } catch (error) {
-      console.warn("Could not save ambient setting.", error);
-    }
-  }
-
-  function loadAmbientState() {
+  function getSavedAmbient() {
     try {
       return localStorage.getItem(STORAGE_KEY) !== "off";
-    } catch (error) {
-      console.warn("Could not load ambient setting.", error);
+    } catch {
       return true;
     }
   }
 
-  function applyAmbientState(isOn) {
+  function setAmbient(isOn) {
     body.classList.toggle("ambient-off", !isOn);
 
     if (ambientToggle) {
       ambientToggle.textContent = isOn ? "Ambient: ON" : "Ambient: OFF";
       ambientToggle.classList.toggle("off", !isOn);
-      ambientToggle.setAttribute("aria-pressed", String(!isOn));
     }
 
-    saveAmbientState(isOn);
+    try {
+      localStorage.setItem(STORAGE_KEY, isOn ? "on" : "off");
+    } catch {}
   }
 
-  if (ambientToggle) {
-    ambientToggle.addEventListener("click", function () {
-      const isCurrentlyOn = !body.classList.contains("ambient-off");
-      applyAmbientState(!isCurrentlyOn);
-    });
-  }
+  ambientToggle?.addEventListener("click", () => {
+    setAmbient(body.classList.contains("ambient-off"));
+  });
 
-  applyAmbientState(loadAmbientState());
+  document.querySelector(".level-3")?.addEventListener("click", () => {
+    alert("Level 3 is coming soon!");
+  });
+
+  setAmbient(getSavedAmbient());
 })();

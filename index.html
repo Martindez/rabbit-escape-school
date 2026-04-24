@@ -7,41 +7,17 @@
   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <div class="dark-overlay"></div>
-  <div class="soft-vignette"></div>
+  <div class="shade"></div>
 
-  <main class="menu">
-    <section class="title-area">
-      <p class="small-title">Rabbit Escape</p>
-      <h1>Rabbit<br />Escape</h1>
-      <p class="subtitle">Choose your escape</p>
-    </section>
-
-    <section class="level-menu">
-      <a class="level-card school" href="./school/">
-        <span class="level-number">Level 1</span>
-        <span class="level-name">School Escape</span>
-      </a>
-
-      <a class="level-card pizzaria" href="./pizzaria/">
-        <span class="level-number">Level 2</span>
-        <span class="level-name">Venezia Pizzaria</span>
-      </a>
-
-      <div class="level-card locked">
-        <span class="level-number">Level 3</span>
-        <span class="level-name">Coming Soon</span>
-      </div>
-    </section>
+  <main class="menu-screen" aria-label="Rabbit Escape Main Menu">
+    <a class="hotspot level-1" href="./school/" aria-label="Play Level 1 School Escape"></a>
+    <a class="hotspot level-2" href="./pizzaria/" aria-label="Play Level 2 Venezia Pizzaria"></a>
+    <button class="hotspot level-3" type="button" aria-label="Level 3 Coming Soon"></button>
 
     <button id="ambientToggle" class="ambient-toggle" type="button">
       Ambient: ON
     </button>
   </main>
-
-  <footer class="footer">
-    Rabbit Escape
-  </footer>
 
   <script src="./script.js"></script>
 </body>
