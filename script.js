@@ -22,7 +22,7 @@ function playGame() {
   unlockAudio();
 
   setTimeout(() => {
-    window.location.href = "school/index.html";
+    window.location.href = "school/";
   }, 300);
 }
 
@@ -31,6 +31,7 @@ function toggleMute() {
 
   muted = !muted;
   menuMusic.muted = muted;
+  localStorage.setItem("rabbitEscapeMuted", muted);
 
   muteBtn.textContent = muted ? "UNMUTE" : "MUTE";
 }
@@ -39,10 +40,12 @@ function openReadMe() {
   unlockAudio();
 
   alert(
-    "STILL INSANE: EDDERKOPPEN\n\n" +
-    "Find a way out.\n" +
+    "STILL INSANE\n\n" +
+    "Level 1: School\n" +
+    "Level 2: Pizzaria\n" +
+    "Level 3: Edderkoppen\n\n" +
+    "Find all keys.\n" +
     "Avoid the killer.\n" +
-    "Use your flashlight.\n" +
-    "Do not get caught."
+    "Escape before you get caught."
   );
 }
