@@ -106,6 +106,27 @@ body {
   background: #000;
 }
 
+.player-light {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 4;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(255, 235, 150, 0.42) 0%,
+    rgba(255, 210, 80, 0.22) 28%,
+    rgba(255, 190, 40, 0.08) 52%,
+    rgba(255, 190, 40, 0) 75%
+  );
+  filter: blur(2px);
+  mix-blend-mode: screen;
+  transition: top 0.25s ease, left 0.25s ease;
+  animation: flashlightPulse 2.4s infinite alternate;
+}
+
 .room-hotspot {
   position: absolute;
   border: 0;
@@ -157,7 +178,7 @@ body {
   height: 18%;
 }
 
-/* Hide all room visual rings */
+/* No visible room boxes/circles */
 .room-ring {
   display: none !important;
 }
@@ -234,6 +255,18 @@ body {
   text-shadow: 0 0 20px black;
 }
 
+@keyframes flashlightPulse {
+  from {
+    opacity: 0.65;
+    transform: translate(-50%, -50%) scale(0.96);
+  }
+
+  to {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
 @keyframes pulse {
   from {
     transform: translate(-50%, -50%) scale(1);
@@ -291,5 +324,10 @@ body {
   .token {
     width: clamp(46px, 11vw, 74px);
     height: clamp(46px, 11vw, 74px);
+  }
+
+  .player-light {
+    width: 180px;
+    height: 180px;
   }
 }

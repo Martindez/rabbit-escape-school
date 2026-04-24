@@ -11,12 +11,12 @@ const rooms = {
 };
 
 const roomPositions = {
-  Kitchen: { top: 12, left: 16 },
-  Storage: { top: 12, left: 50 },
-  Staff: { top: 12, left: 84 },
-  Arcade: { top: 45, left: 16 },
-  Dining: { top: 45, left: 50 },
-  Bath: { top: 45, left: 84 },
+  Kitchen: { top: 16, left: 16 },
+  Storage: { top: 16, left: 50 },
+  Staff: { top: 16, left: 84 },
+  Arcade: { top: 48, left: 16 },
+  Dining: { top: 48, left: 50 },
+  Bath: { top: 48, left: 84 },
   Delivery: { top: 82, left: 16 },
   Oven: { top: 82, left: 50 },
   Exit: { top: 82, left: 84 }
@@ -45,6 +45,7 @@ let gameState = {
 };
 
 let audioContext = null;
+let playerLight = null;
 
 const ui = {
   startScreen: document.getElementById("startScreen"),
@@ -67,6 +68,7 @@ const ui = {
   keyLayer: document.getElementById("keyLayer"),
   flashOverlay: document.getElementById("flashOverlay"),
   jumpscareOverlay: document.getElementById("jumpscareOverlay"),
+  mapBoard: document.querySelector(".map-board"),
   roomButtons: document.querySelectorAll(".room-hotspot"),
   roomRings: document.querySelectorAll(".room-ring")
 };
@@ -80,6 +82,14 @@ ui.menuBtn.addEventListener("click", () => {
 ui.roomButtons.forEach((button) => {
   button.addEventListener("click", () => movePlayer(button.dataset.room));
 });
+
+function createPlayerLight() {
+  if (playerLight) return;
+
+  playerLight = document.createElement("div");
+  playerLight.className = "player-light";
+  ui.mapBoard.appendChild(playerLight);
+}
 
 function initAudio() {
   if (!audioContext) {
@@ -112,6 +122,7 @@ function playTone(frequency, duration, type = "sine", volume = 0.04) {
 
 function startGame() {
   initAudio();
+  createPlayerLight();
 
   gameState = {
     playerRoom: "Dining",
@@ -227,14 +238,22 @@ function updateUI() {
 
   moveToken(ui.playerToken, gameState.playerRoom);
   moveToken(ui.killerToken, gameState.killerRoom);
+  moveLight(gameState.playerRoom);
   drawKeys();
-  updateRings();
 }
 
 function moveToken(token, room) {
   const pos = roomPositions[room];
   token.style.top = `${pos.top}%`;
   token.style.left = `${pos.left}%`;
+}
+
+function moveLight(room) {
+  if (!playerLight) return;
+
+  const pos = roomPositions[room];
+  playerLight.style.top = `${pos.top}%`;
+  playerLight.style.left = `${pos.left}%`;
 }
 
 function drawKeys() {
@@ -249,22 +268,6 @@ function drawKeys() {
     key.style.top = `${pos.top + 6}%`;
     key.style.left = `${pos.left + 5}%`;
     ui.keyLayer.appendChild(key);
-  });
-}
-
-function updateRings() {
-  ui.roomRings.forEach((ring) => {
-    const room = ring.dataset.ring;
-    ring.className = ring.className
-      .replace(" connected", "")
-      .replace(" current", "")
-      .replace(" killer-room", "")
-      .replace(" exit-open", "");
-
-    if (room === gameState.playerRoom) ring.classList.add("current");
-    if (room === gameState.killerRoom) ring.classList.add("killer-room");
-    if (rooms[gameState.playerRoom]?.includes(room)) ring.classList.add("connected");
-    if (room === "Exit" && gameState.collectedKeys.length >= totalKeys) ring.classList.add("exit-open");
   });
 }
 
@@ -289,4 +292,5 @@ function shuffle(array) {
   return array.sort(() => Math.random() - 0.5);
 }
 
+createPlayerLight();
 updateUI();

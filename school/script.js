@@ -8,12 +8,12 @@ const rooms = {
 };
 
 const roomPositions = {
-  Electrical: { top: 18, left: 20 },
-  Gym: { top: 18, left: 50 },
-  Kitchen: { top: 18, left: 80 },
-  Security: { top: 57, left: 14 },
+  Electrical: { top: 20, left: 20 },
+  Gym: { top: 20, left: 50 },
+  Kitchen: { top: 20, left: 80 },
+  Security: { top: 57, left: 17 },
   Playground: { top: 58, left: 50 },
-  Exit: { top: 83, left: 50 }
+  Exit: { top: 82, left: 50 }
 };
 
 const possibleKeyRooms = ["Electrical", "Gym", "Kitchen", "Security", "Playground"];
@@ -29,6 +29,7 @@ let gameState = {
 };
 
 let audioContext = null;
+let playerLight = null;
 
 const ui = {
   startScreen: document.getElementById("startScreen"),
@@ -51,6 +52,7 @@ const ui = {
   keyLayer: document.getElementById("keyLayer"),
   flashOverlay: document.getElementById("flashOverlay"),
   jumpscareOverlay: document.getElementById("jumpscareOverlay"),
+  mapBoard: document.querySelector(".map-board"),
   roomButtons: document.querySelectorAll(".room-hotspot"),
   roomRings: document.querySelectorAll(".room-ring")
 };
@@ -64,6 +66,14 @@ ui.nextLevelBtn.addEventListener("click", () => {
 ui.roomButtons.forEach((button) => {
   button.addEventListener("click", () => movePlayer(button.dataset.room));
 });
+
+function createPlayerLight() {
+  if (playerLight) return;
+
+  playerLight = document.createElement("div");
+  playerLight.className = "player-light";
+  ui.mapBoard.appendChild(playerLight);
+}
 
 function initAudio() {
   if (!audioContext) {
@@ -96,6 +106,7 @@ function playTone(frequency, duration, type = "sine", volume = 0.04) {
 
 function startGame() {
   initAudio();
+  createPlayerLight();
 
   gameState = {
     playerRoom: "Playground",
@@ -213,14 +224,22 @@ function updateUI() {
 
   moveToken(ui.playerToken, gameState.playerRoom);
   moveToken(ui.killerToken, gameState.killerRoom);
+  moveLight(gameState.playerRoom);
   drawKeys();
-  updateRings();
 }
 
 function moveToken(token, room) {
   const pos = roomPositions[room];
   token.style.top = `${pos.top}%`;
   token.style.left = `${pos.left}%`;
+}
+
+function moveLight(room) {
+  if (!playerLight) return;
+
+  const pos = roomPositions[room];
+  playerLight.style.top = `${pos.top}%`;
+  playerLight.style.left = `${pos.left}%`;
 }
 
 function drawKeys() {
@@ -235,22 +254,6 @@ function drawKeys() {
     key.style.top = `${pos.top + 6}%`;
     key.style.left = `${pos.left + 5}%`;
     ui.keyLayer.appendChild(key);
-  });
-}
-
-function updateRings() {
-  ui.roomRings.forEach((ring) => {
-    const room = ring.dataset.ring;
-    ring.className = ring.className
-      .replace(" connected", "")
-      .replace(" current", "")
-      .replace(" killer-room", "")
-      .replace(" exit-open", "");
-
-    if (room === gameState.playerRoom) ring.classList.add("current");
-    if (room === gameState.killerRoom) ring.classList.add("killer-room");
-    if (rooms[gameState.playerRoom]?.includes(room)) ring.classList.add("connected");
-    if (room === "Exit" && gameState.collectedKeys.length >= totalKeys) ring.classList.add("exit-open");
   });
 }
 
@@ -275,4 +278,5 @@ function shuffle(array) {
   return array.sort(() => Math.random() - 0.5);
 }
 
+createPlayerLight();
 updateUI();
