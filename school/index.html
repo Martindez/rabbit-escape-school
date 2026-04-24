@@ -4,113 +4,50 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rabbit Escape - School</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
   <div id="flashOverlay" class="flash-overlay"></div>
 
-  <div id="jumpscareOverlay" class="jumpscare-overlay hidden" aria-hidden="true">
-    <div class="jumpscare-bg"></div>
-    <img
-      src="../assets/killer.png"
-      alt="Killer Rabbit"
-      class="jumpscare-killer"
-    />
+  <div id="jumpscareOverlay" class="jumpscare-overlay hidden">
+    <img src="../assets/killer.png" alt="Killer Rabbit" class="jumpscare-killer" />
     <div class="jumpscare-text">CAUGHT!</div>
   </div>
 
-  <div class="app">
+  <main class="app">
     <header class="topbar">
       <h1>Rabbit Escape</h1>
-      <p class="subtitle">Level 1 · School Escape</p>
+      <p>Level 1 · School</p>
     </header>
 
     <section id="startScreen" class="panel screen">
-      <div class="start-card">
-        <p class="eyebrow">LEVEL 1</p>
-        <h2 class="game-title">School Escape V2</h2>
-        <p class="start-tagline">
-          Search the school, collect all 4 glowing keys, avoid the killer rabbit,
-          and escape through the Exit.
-        </p>
-
-        <div class="start-rules">
-          <div class="rule-pill">Click connected rooms to move</div>
-          <div class="rule-pill">Look for glowing keys on the map</div>
-          <div class="rule-pill">Collect 4 keys to unlock Exit</div>
-          <div class="rule-pill">Caught 3 times = lose</div>
-        </div>
-
-        <button id="startBtn" class="main-btn start-main-btn" type="button">
-          Start Level 1
-        </button>
-      </div>
+      <h2>School Escape</h2>
+      <p>Collect 4 keys, avoid the killer rabbit, and reach the Exit.</p>
+      <button id="startBtn" class="main-btn" type="button">Start Level 1</button>
     </section>
 
     <section id="hud" class="panel hidden">
       <div class="hud-grid">
-        <div><strong>Goal:</strong> <span id="goalText">Find 4 keys</span></div>
         <div><strong>Keys:</strong> <span id="keyCount">0</span>/4</div>
         <div><strong>Hearts:</strong> <span id="hearts">❤️ ❤️ ❤️</span></div>
-        <div><strong>Danger:</strong> <span id="dangerText">Low</span></div>
         <div><strong>Player:</strong> <span id="playerRoom">Playground</span></div>
         <div><strong>Killer:</strong> <span id="killerRoom">Kitchen</span></div>
         <div><strong>Exit:</strong> <span id="exitState">Locked</span></div>
-        <div><strong>Best Time:</strong> <span id="bestTime">--</span></div>
       </div>
-
-      <div class="danger-bar-wrap" aria-label="Danger meter">
-        <div id="dangerBar" class="danger-bar"></div>
-      </div>
+      <p id="messageText" class="message">Press a connected room to move.</p>
     </section>
 
     <section id="gameWrap" class="panel hidden">
       <div class="map-board">
-        <img
-          src="./assets/map.jpg"
-          alt="School map"
-          class="map-image"
-        />
+        <img src="./assets/map.jpg" alt="School map" class="map-image" />
 
-        <!-- clickable hotspots -->
-        <button
-          class="room-hotspot electrical"
-          data-room="Electrical"
-          aria-label="Electrical"
-          type="button"
-        ></button>
-        <button
-          class="room-hotspot gym"
-          data-room="Gym"
-          aria-label="Gym"
-          type="button"
-        ></button>
-        <button
-          class="room-hotspot kitchen"
-          data-room="Kitchen"
-          aria-label="Kitchen"
-          type="button"
-        ></button>
-        <button
-          class="room-hotspot security"
-          data-room="Security"
-          aria-label="Security"
-          type="button"
-        ></button>
-        <button
-          class="room-hotspot playground"
-          data-room="Playground"
-          aria-label="Playground"
-          type="button"
-        ></button>
-        <button
-          class="room-hotspot exit-room"
-          data-room="Exit"
-          aria-label="Exit"
-          type="button"
-        ></button>
+        <button class="room-hotspot electrical" data-room="Electrical" type="button"></button>
+        <button class="room-hotspot gym" data-room="Gym" type="button"></button>
+        <button class="room-hotspot kitchen" data-room="Kitchen" type="button"></button>
+        <button class="room-hotspot security" data-room="Security" type="button"></button>
+        <button class="room-hotspot playground" data-room="Playground" type="button"></button>
+        <button class="room-hotspot exit-room" data-room="Exit" type="button"></button>
 
-        <!-- visual room rings -->
         <div class="room-ring electrical-ring" data-ring="Electrical"></div>
         <div class="room-ring gym-ring" data-ring="Gym"></div>
         <div class="room-ring kitchen-ring" data-ring="Kitchen"></div>
@@ -118,70 +55,21 @@
         <div class="room-ring playground-ring" data-ring="Playground"></div>
         <div class="room-ring exit-ring" data-ring="Exit"></div>
 
-        <!-- visible key icons -->
-        <div id="keyLayer" class="key-layer" aria-hidden="true"></div>
+        <div id="keyLayer" class="key-layer"></div>
 
-        <img
-          id="playerToken"
-          class="token player-token"
-          src="../assets/player.png"
-          alt="Player"
-        />
-
-        <img
-          id="killerToken"
-          class="token killer-token"
-          src="../assets/killer.png"
-          alt="Killer"
-        />
+        <img id="playerToken" class="token player-token" src="../assets/player.png" alt="Player" />
+        <img id="killerToken" class="token killer-token" src="../assets/killer.png" alt="Killer" />
       </div>
     </section>
 
-    <section id="messageBox" class="panel hidden">
-      <p id="messageText">Press Start to begin.</p>
+    <section id="endScreen" class="panel screen hidden">
+      <h2 id="endTitle">You Escaped!</h2>
+      <p id="endText">You escaped the school.</p>
+      <button id="restartBtn" class="main-btn" type="button">Play Again</button>
+      <button id="nextLevelBtn" class="main-btn hidden" type="button">Next Level</button>
     </section>
+  </main>
 
-    <section id="endScreen" class="panel screen end-screen hidden">
-      <div class="end-card">
-        <p id="endEyebrow" class="end-eyebrow">ROUND COMPLETE</p>
-        <h2 id="endTitle" class="end-title">You Escaped!</h2>
-        <p id="endText" class="end-text">You escaped the school.</p>
-
-        <div class="end-stats">
-          <div class="end-stat">
-            <span class="end-stat-label">Time</span>
-            <span id="endTime" class="end-stat-value">--</span>
-          </div>
-          <div class="end-stat">
-            <span class="end-stat-label">Hearts Left</span>
-            <span id="endHearts" class="end-stat-value">--</span>
-          </div>
-          <div class="end-stat">
-            <span class="end-stat-label">Keys</span>
-            <span id="endKeys" class="end-stat-value">--</span>
-          </div>
-          <div class="end-stat">
-            <span class="end-stat-label">Best Time</span>
-            <span id="endBestTime" class="end-stat-value">--</span>
-          </div>
-        </div>
-
-        <div class="end-buttons">
-          <button id="restartBtn" class="main-btn start-main-btn" type="button">
-            Play Again
-          </button>
-          <button
-            id="nextLevelBtn"
-            class="main-btn start-main-btn hidden"
-            type="button"
-          >
-            Next Level
-          </button>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <script src="script.js"></script>
+  <script src="./script.js"></script>
 </body>
 </html>
