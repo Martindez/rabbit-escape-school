@@ -7,15 +7,14 @@
 html,
 body {
   width: 100%;
-  min-height: 100%;
+  height: 100%;
 }
 
 body {
   background: #000;
-  color: white;
-  font-family: Arial, Helvetica, sans-serif;
   overflow: hidden;
-  user-select: none;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
 }
 
 .menu-screen {
@@ -23,65 +22,55 @@ body {
   width: 100vw;
   height: 100vh;
   height: 100dvh;
+  overflow: hidden;
+}
+
+.moving-bg {
+  position: absolute;
+  inset: -4%;
   background-image: url("assets/menu-bg-clean.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  overflow: hidden;
-  animation: backgroundBreath 10s ease-in-out infinite alternate;
+  animation: slowZoom 12s ease-in-out infinite alternate;
+  z-index: 1;
 }
 
-/* moving rain */
-.menu-screen::before {
-  content: "";
+.rain {
   position: absolute;
   inset: -100px;
   background-image: repeating-linear-gradient(
     115deg,
-    rgba(255, 255, 255, 0.08) 0px,
-    rgba(255, 255, 255, 0.08) 1px,
+    rgba(255, 255, 255, 0.18) 0px,
+    rgba(255, 255, 255, 0.18) 1px,
     transparent 1px,
     transparent 9px
   );
-  opacity: 0.25;
-  animation: rainMove 0.45s linear infinite;
+  opacity: 0.22;
+  animation: rainMove 0.35s linear infinite;
+  z-index: 3;
   pointer-events: none;
-  z-index: 2;
 }
 
-/* fog / mist */
-.menu-screen::after {
-  content: "";
+.fog {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 20% 70%, rgba(255,255,255,0.08), transparent 30%),
-    radial-gradient(circle at 80% 35%, rgba(255,255,255,0.06), transparent 35%);
-  opacity: 0.7;
-  animation: fogMove 8s ease-in-out infinite alternate;
+    radial-gradient(circle at 20% 65%, rgba(255,255,255,0.12), transparent 35%),
+    radial-gradient(circle at 80% 35%, rgba(255,255,255,0.08), transparent 40%);
+  animation: fogMove 7s ease-in-out infinite alternate;
+  z-index: 4;
   pointer-events: none;
-  z-index: 3;
 }
 
 .dark-vignette {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at center, rgba(0,0,0,0.05), rgba(0,0,0,0.85)),
-    linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
-  z-index: 1;
+    radial-gradient(circle, rgba(0,0,0,0.05), rgba(0,0,0,0.75)),
+    linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.65));
+  z-index: 5;
   pointer-events: none;
-}
-
-.noise {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  pointer-events: none;
-  opacity: 0.12;
-  background-image:
-    repeating-radial-gradient(circle, rgba(255,255,255,0.12) 0 1px, transparent 1px 4px);
-  animation: noiseMove 0.25s infinite;
 }
 
 .menu-content {
@@ -98,46 +87,87 @@ body {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  align-items: center;
 }
 
 .menu-btn {
   width: min(290px, 78vw);
   padding: 15px 0;
-  border: 1px solid rgba(255, 40, 40, 0.95);
-  border-radius: 8px;
   background: rgba(0, 0, 0, 0.72);
   color: white;
+  border: 1px solid rgba(255, 40, 40, 0.95);
+  border-radius: 8px;
   font-size: clamp(1rem, 3vw, 1.35rem);
   font-weight: 900;
   letter-spacing: 5px;
   cursor: pointer;
   text-shadow: 0 0 10px red;
   box-shadow:
-    0 0 14px rgba(255, 0, 0, 0.35),
-    inset 0 0 14px rgba(255, 0, 0, 0.12);
+    0 0 16px rgba(255, 0, 0, 0.45),
+    inset 0 0 16px rgba(255, 0, 0, 0.14);
   backdrop-filter: blur(5px);
-  animation: buttonPulse 2.6s ease-in-out infinite alternate;
+  animation: buttonPulse 2s ease-in-out infinite alternate;
   transition: 0.2s;
 }
 
 .menu-btn:hover,
 .menu-btn:active {
   transform: scale(1.06);
-  background: rgba(120, 0, 0, 0.8);
-  box-shadow:
-    0 0 28px rgba(255, 0, 0, 0.9),
-    inset 0 0 22px rgba(255, 255, 255, 0.12);
+  background: rgba(120, 0, 0, 0.85);
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.9);
 }
 
 .play-btn {
   border-color: rgba(255, 230, 120, 0.95);
-  box-shadow:
-    0 0 20px rgba(255, 210, 80, 0.35),
-    inset 0 0 14px rgba(255, 255, 255, 0.08);
 }
 
-/* Read Me popup */
+@keyframes slowZoom {
+  from {
+    transform: scale(1) translate(0, 0);
+    filter: brightness(0.95);
+  }
+
+  to {
+    transform: scale(1.08) translate(-1.5%, -1%);
+    filter: brightness(1.08);
+  }
+}
+
+@keyframes rainMove {
+  from {
+    transform: translateY(-80px);
+  }
+
+  to {
+    transform: translateY(80px);
+  }
+}
+
+@keyframes fogMove {
+  from {
+    transform: translateX(-35px);
+    opacity: 0.35;
+  }
+
+  to {
+    transform: translateX(35px);
+    opacity: 0.75;
+  }
+}
+
+@keyframes buttonPulse {
+  from {
+    box-shadow:
+      0 0 12px rgba(255, 0, 0, 0.35),
+      inset 0 0 10px rgba(255, 0, 0, 0.08);
+  }
+
+  to {
+    box-shadow:
+      0 0 28px rgba(255, 0, 0, 0.75),
+      inset 0 0 20px rgba(255, 0, 0, 0.18);
+  }
+}
+
 #readmeOverlay {
   animation: fadeIn 0.2s ease;
 }
@@ -149,63 +179,6 @@ body {
 .close-readme:hover {
   transform: scale(1.05);
   background: #ff2b33 !important;
-}
-
-/* Animations */
-@keyframes backgroundBreath {
-  from {
-    background-size: 100%;
-    filter: brightness(0.92);
-  }
-
-  to {
-    background-size: 106%;
-    filter: brightness(1.08);
-  }
-}
-
-@keyframes rainMove {
-  from {
-    transform: translateY(-60px);
-  }
-
-  to {
-    transform: translateY(60px);
-  }
-}
-
-@keyframes fogMove {
-  from {
-    transform: translateX(-25px) scale(1);
-    opacity: 0.45;
-  }
-
-  to {
-    transform: translateX(25px) scale(1.05);
-    opacity: 0.75;
-  }
-}
-
-@keyframes noiseMove {
-  0% { transform: translate(0, 0); }
-  25% { transform: translate(-1%, 1%); }
-  50% { transform: translate(1%, -1%); }
-  75% { transform: translate(-1%, -1%); }
-  100% { transform: translate(0, 0); }
-}
-
-@keyframes buttonPulse {
-  from {
-    box-shadow:
-      0 0 10px rgba(255, 0, 0, 0.25),
-      inset 0 0 10px rgba(255, 0, 0, 0.08);
-  }
-
-  to {
-    box-shadow:
-      0 0 22px rgba(255, 0, 0, 0.55),
-      inset 0 0 18px rgba(255, 0, 0, 0.16);
-  }
 }
 
 @keyframes fadeIn {
