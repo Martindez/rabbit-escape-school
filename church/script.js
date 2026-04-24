@@ -11,37 +11,26 @@ const rooms = {
 };
 
 const roomPositions = {
-  "Bell Tower": { top: 14, left: 50 },
-  Storage: { top: 35, left: 18 },
-  "Main Hall": { top: 36, left: 50 },
-  Confession: { top: 35, left: 82 },
-  Altar: { top: 58, left: 50 },
-  Entrance: { top: 79, left: 18 },
+  "Bell Tower": { top: 15, left: 50 },
+  Storage: { top: 40, left: 25 },
+  "Main Hall": { top: 42, left: 50 },
+  Confession: { top: 40, left: 75 },
+  Altar: { top: 61, left: 50 },
+  Entrance: { top: 76, left: 25 },
   Basement: { top: 79, left: 50 },
-  Graveyard: { top: 79, left: 82 },
-  Exit: { top: 92, left: 50 }
-};
-
-const relicPositions = {
-  "Bell Tower": { top: 21, left: 50 },
-  Storage: { top: 42, left: 24 },
-  "Main Hall": { top: 45, left: 50 },
-  Confession: { top: 42, left: 76 },
-  Altar: { top: 62, left: 50 },
-  Entrance: { top: 78, left: 24 },
-  Basement: { top: 80, left: 50 },
-  Graveyard: { top: 79, left: 77 }
+  Graveyard: { top: 75, left: 76 },
+  Exit: { top: 90, left: 50 }
 };
 
 const secretWord = "INSANE";
 
 const relicRooms = [
   "Bell Tower",
-  "Storage",
+  Storage,
   "Main Hall",
-  "Confession",
-  "Altar",
-  "Graveyard"
+  Confession,
+  Altar,
+  Graveyard
 ];
 
 const relicLetters = {
@@ -55,7 +44,6 @@ const relicLetters = {
 
 const totalRelics = 6;
 
-let moveMode = "sneak";
 let exitTimer = null;
 let exitTimeLeft = 5;
 
@@ -95,9 +83,6 @@ const ui = {
   jumpscareOverlay: document.getElementById("jumpscareOverlay"),
   mapBoard: document.querySelector(".map-board"),
   roomButtons: document.querySelectorAll(".room-hotspot"),
-  sneakBtn: document.getElementById("sneakBtn"),
-  runBtn: document.getElementById("runBtn"),
-  moveModeText: document.getElementById("moveModeText"),
   lettersText: document.getElementById("lettersText"),
   codeOverlay: document.getElementById("codeOverlay"),
   timerText: document.getElementById("timerText"),
@@ -111,9 +96,6 @@ ui.restartBtn.addEventListener("click", startGame);
 ui.menuBtn.addEventListener("click", () => {
   window.location.href = "../";
 });
-
-ui.sneakBtn.addEventListener("click", () => setMoveMode("sneak"));
-ui.runBtn.addEventListener("click", () => setMoveMode("run"));
 
 ui.submitCodeBtn.addEventListener("click", submitExitCode);
 
@@ -129,20 +111,6 @@ ui.roomButtons.forEach((button) => {
 });
 
 document.addEventListener("pointerdown", startAmbientMusic);
-
-function setMoveMode(mode) {
-  moveMode = mode;
-
-  ui.sneakBtn.classList.toggle("active", mode === "sneak");
-  ui.runBtn.classList.toggle("active", mode === "run");
-  ui.moveModeText.textContent = mode === "sneak" ? "Sneak" : "Run";
-
-  showMessage(
-    mode === "sneak"
-      ? "Sneak mode: quieter, but slower tension."
-      : "Run mode: loud. The killer becomes aggressive."
-  );
-}
 
 function startAmbientMusic() {
   const muted = localStorage.getItem("rabbitEscapeMuted") === "true";
@@ -212,7 +180,6 @@ function startGame() {
   initAudio();
   startAmbientMusic();
   createPlayerLight();
-  setMoveMode("sneak");
 
   gameState = {
     playerRoom: "Entrance",
@@ -253,7 +220,7 @@ function movePlayer(room) {
   gameState.playerRoom = room;
   gameState.turnCount++;
 
-  playTone(moveMode === "run" ? 560 : 390, 0.08, "triangle", 0.035);
+  playTone(430, 0.08, "triangle", 0.035);
 
   collectRelicIfNeeded();
 
@@ -263,19 +230,10 @@ function movePlayer(room) {
     return;
   }
 
-  if (moveMode === "sneak") {
-    moveKillerSmart(0.45);
-  } else {
-    moveKillerSmart(0.9);
-
-    if (Math.random() < 0.55) {
-      moveKillerSmart(0.9);
-      showMessage("The killer heard you running!");
-    }
-  }
+  moveKillerSmart();
 
   if (gameState.collectedRelics.length >= 4 && Math.random() < 0.35) {
-    moveKillerSmart(0.8);
+    moveKillerSmart();
     showMessage("The church bell rings. The killer moves again.");
   }
 
@@ -365,7 +323,8 @@ function winGame() {
   setTimeout(() => playTone(784, 0.18, "triangle", 0.05), 240);
 }
 
-function moveKillerSmart(chaseChance) {
+function moveKillerSmart() {
+  const chaseChance = gameState.collectedRelics.length >= 3 ? 0.75 : 0.55;
   const path = findShortestPath(gameState.killerRoom, gameState.playerRoom);
 
   if (path.length > 1 && Math.random() < chaseChance) {
@@ -435,13 +394,13 @@ function updateUI() {
   ui.hearts.textContent = gameState.hearts > 0 ? "❤️" : "💔";
   ui.playerRoom.textContent = gameState.playerRoom;
   ui.killerRoom.textContent = gameState.killerRoom;
-  ui.exitState.textContent = gameState.collectedRelics.length >= totalRelics ? "Code Required" : "Sealed";
+  ui.exitState.textContent =
+    gameState.collectedRelics.length >= totalRelics ? "Code Required" : "Sealed";
   ui.lettersText.textContent = getRevealedWordDisplay();
 
   moveToken(ui.playerToken, gameState.playerRoom);
   moveToken(ui.killerToken, gameState.killerRoom);
   moveLight(gameState.playerRoom);
-  drawRelics();
 }
 
 function getRevealedWordDisplay() {
@@ -474,23 +433,6 @@ function moveLight(room) {
     playerLight.style.top = `${pos.top}%`;
     playerLight.style.left = `${pos.left}%`;
   }, 80);
-}
-
-function drawRelics() {
-  ui.keyLayer.innerHTML = "";
-
-  relicRooms.forEach((room) => {
-    if (gameState.collectedRelics.includes(room)) return;
-
-    const pos = relicPositions[room];
-    const relic = document.createElement("div");
-
-    relic.className = "church-relic";
-    relic.style.top = `${pos.top}%`;
-    relic.style.left = `${pos.left}%`;
-
-    ui.keyLayer.appendChild(relic);
-  });
 }
 
 function showMessage(text) {

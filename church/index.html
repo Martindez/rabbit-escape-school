@@ -20,7 +20,7 @@
   <div id="codeOverlay" class="code-overlay hidden">
     <div class="code-box">
       <h2>THE EXIT DEMANDS A WORD</h2>
-      <p>Type the secret word before the bell stops ringing.</p>
+      <p>Type the secret word before time runs out.</p>
       <div id="timerText" class="timer-text">5</div>
       <input id="codeInput" class="code-input" type="text" autocomplete="off" placeholder="Type the word..." />
       <button id="submitCodeBtn" class="main-btn" type="button">SUBMIT</button>
@@ -37,15 +37,10 @@
     <section id="hud" class="panel">
       <div class="hud-grid">
         <div><strong>Relics:</strong> <span id="keyCount">0</span>/6</div>
-        <div><strong>Mode:</strong> <span id="moveModeText">Sneak</span></div>
+        <div><strong>Hearts:</strong> <span id="hearts">❤️</span></div>
         <div><strong>Player:</strong> <span id="playerRoom">Entrance</span></div>
         <div><strong>Killer:</strong> <span id="killerRoom">Bell Tower</span></div>
         <div><strong>Exit:</strong> <span id="exitState">Sealed</span></div>
-      </div>
-
-      <div class="mode-buttons">
-        <button id="sneakBtn" class="mode-btn active" type="button">SNEAK</button>
-        <button id="runBtn" class="mode-btn" type="button">RUN</button>
       </div>
 
       <div class="letters-panel">

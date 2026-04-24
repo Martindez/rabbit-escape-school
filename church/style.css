@@ -88,29 +88,6 @@ body {
   font-weight: 700;
 }
 
-.mode-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.mode-btn {
-  background: #2a2a2a;
-  color: white;
-  border: 1px solid #555;
-  border-radius: 12px;
-  padding: 10px 20px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.mode-btn.active {
-  background: #d81f26;
-  border-color: #ff4242;
-  box-shadow: 0 0 14px rgba(255, 0, 0, 0.5);
-}
-
 .letters-panel {
   margin-top: 12px;
   text-align: center;
@@ -156,83 +133,83 @@ body {
   touch-action: manipulation;
 }
 
-/* CHURCH HITBOXES */
+/* CHURCH HITBOXES - adjusted for your current map */
 .room-hotspot.bell-tower {
-  top: 4%;
-  left: 40%;
-  width: 20%;
-  height: 18%;
+  top: 2%;
+  left: 39%;
+  width: 22%;
+  height: 19%;
 }
 
 .room-hotspot.storage {
   top: 25%;
-  left: 6%;
-  width: 26%;
-  height: 20%;
+  left: 10%;
+  width: 24%;
+  height: 22%;
 }
 
 .room-hotspot.main-hall {
   top: 24%;
   left: 36%;
   width: 28%;
-  height: 25%;
+  height: 27%;
 }
 
 .room-hotspot.confession {
   top: 25%;
-  left: 68%;
-  width: 26%;
-  height: 20%;
+  left: 66%;
+  width: 24%;
+  height: 22%;
 }
 
 .room-hotspot.altar {
-  top: 50%;
+  top: 52%;
+  left: 37%;
+  width: 26%;
+  height: 17%;
+}
+
+.room-hotspot.entrance {
+  top: 63%;
+  left: 10%;
+  width: 25%;
+  height: 24%;
+}
+
+.room-hotspot.basement {
+  top: 70%;
   left: 37%;
   width: 26%;
   height: 18%;
 }
 
-.room-hotspot.entrance {
-  top: 68%;
-  left: 6%;
-  width: 25%;
-  height: 22%;
-}
-
-.room-hotspot.basement {
-  top: 68%;
-  left: 37%;
-  width: 26%;
-  height: 22%;
-}
-
 .room-hotspot.graveyard {
-  top: 68%;
-  left: 68%;
-  width: 26%;
-  height: 22%;
+  top: 60%;
+  left: 66%;
+  width: 27%;
+  height: 29%;
 }
 
 .room-hotspot.exit-room {
-  top: 87%;
-  left: 40%;
-  width: 20%;
-  height: 11%;
+  top: 86%;
+  left: 39%;
+  width: 22%;
+  height: 12%;
 }
 
 .player-light {
   position: absolute;
-  width: 210px;
-  height: 210px;
+  width: 190px;
+  height: 190px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
   z-index: 4;
   pointer-events: none;
   background: radial-gradient(
     circle,
-    rgba(255, 240, 175, 0.5) 0%,
-    rgba(255, 220, 95, 0.28) 30%,
-    rgba(255, 180, 40, 0.1) 55%,
+    rgba(255, 240, 175, 0.42) 0%,
+    rgba(255, 220, 95, 0.22) 30%,
+    rgba(255, 180, 40, 0.08) 55%,
     rgba(255, 180, 40, 0) 76%
   );
   filter: blur(2px);
@@ -248,41 +225,9 @@ body {
   pointer-events: none;
 }
 
+/* No extra yellow balls. Map already has built-in relic icons. */
 .church-relic {
-  position: absolute;
-  transform: translate(-50%, -50%);
-  width: clamp(25px, 3.2vw, 38px);
-  height: clamp(25px, 3.2vw, 38px);
-  z-index: 6;
-  pointer-events: none;
-}
-
-.church-relic::before {
-  content: "✦";
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  color: #ffd66b;
-  font-size: clamp(22px, 3vw, 34px);
-  text-shadow:
-    0 0 6px #ffd66b,
-    0 0 14px rgba(255, 170, 0, 0.9),
-    0 0 24px rgba(255, 70, 0, 0.55);
-  animation: relicFloat 1.3s ease-in-out infinite alternate;
-}
-
-.church-relic::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 70%;
-  width: 36px;
-  height: 10px;
-  transform: translateX(-50%);
-  border-radius: 50%;
-  background: rgba(255, 180, 40, 0.2);
-  filter: blur(6px);
+  display: none;
 }
 
 .token {
@@ -293,9 +238,9 @@ body {
 }
 
 .player-token {
-  width: clamp(68px, 10vw, 112px);
-  height: clamp(68px, 10vw, 112px);
-  transform: translate(-50%, -82%);
+  width: clamp(52px, 7vw, 86px);
+  height: clamp(52px, 7vw, 86px);
+  transform: translate(-50%, -78%);
   z-index: 8;
   filter:
     drop-shadow(0 0 10px rgba(255, 235, 150, 0.9))
@@ -303,9 +248,9 @@ body {
 }
 
 .killer-token {
-  width: clamp(82px, 12vw, 138px);
-  height: clamp(82px, 12vw, 138px);
-  transform: translate(-50%, -86%);
+  width: clamp(66px, 8.5vw, 104px);
+  height: clamp(66px, 8.5vw, 104px);
+  transform: translate(-50%, -82%);
   z-index: 9;
   filter:
     drop-shadow(0 0 12px rgba(255, 0, 0, 0.95))
@@ -427,18 +372,6 @@ body {
   }
 }
 
-@keyframes relicFloat {
-  from {
-    opacity: 0.8;
-    transform: translateY(0) scale(0.92);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(-5px) scale(1.08);
-  }
-}
-
 @keyframes killerIdle {
   from {
     filter:
@@ -499,25 +432,17 @@ body {
   }
 
   .player-token {
-    width: clamp(58px, 13vw, 88px);
-    height: clamp(58px, 13vw, 88px);
+    width: clamp(46px, 12vw, 74px);
+    height: clamp(46px, 12vw, 74px);
   }
 
   .killer-token {
-    width: clamp(70px, 15vw, 104px);
-    height: clamp(70px, 15vw, 104px);
+    width: clamp(58px, 14vw, 90px);
+    height: clamp(58px, 14vw, 90px);
   }
 
   .player-light {
-    width: 160px;
-    height: 160px;
-  }
-
-  .mode-buttons {
-    gap: 6px;
-  }
-
-  .mode-btn {
-    padding: 9px 16px;
+    width: 150px;
+    height: 150px;
   }
 }
