@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Still Insane - Edderkoppen</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="map-container">
+    <img src="assets/edderkoppen.jpg" class="map-image" alt="Edderkoppen Map" />
+
+    <button class="room-btn fantasirommet" onclick="goRoom('Fantasirommet')">Fantasirommet</button>
+    <button class="room-btn trapper" onclick="goRoom('Trapper')">Trapper</button>
+    <button class="room-btn byggeplassen" onclick="goRoom('Byggeplassen')">Byggeplassen</button>
+    <button class="room-btn spelebula" onclick="goRoom('Spelebula')">Spelebula</button>
+    <button class="room-btn edderkoppen" onclick="goRoom('Edderkoppen')">Edderkoppen</button>
+    <button class="room-btn toalett" onclick="goRoom('Toalett')">Toalett</button>
+    <button class="room-btn legorommet" onclick="goRoom('Legorommet')">Legorommet</button>
+    <button class="room-btn gangen" onclick="exitMap()">Gangen</button>
+  </div>
+
+  <audio id="ambientSound" src="../assets/game-ambient.mp3" loop></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
