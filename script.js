@@ -1,29 +1,26 @@
-(function () {
-  const playButton = document.getElementById("playButton");
-  const loadingScreen = document.getElementById("loadingScreen");
-  const menuHint = document.getElementById("menuHint");
+const playBtn = document.getElementById("playBtn");
+const viewBgBtn = document.getElementById("viewBgBtn");
+const loading = document.getElementById("loading");
 
-  function startGame() {
-    if (!playButton) return;
+function startGame() {
+  playBtn.disabled = true;
+  playBtn.textContent = "Loading...";
 
-    playButton.disabled = true;
-    playButton.textContent = "Loading...";
-    if (menuHint) menuHint.textContent = "Do not let the rabbit catch you.";
+  loading.classList.add("show");
 
-    if (loadingScreen) {
-      loadingScreen.classList.add("show");
-    }
+  setTimeout(() => {
+    window.location.href = "./school/";
+  }, 650);
+}
 
-    setTimeout(() => {
-      window.location.href = "./school/";
-    }, 650);
+playBtn.addEventListener("click", startGame);
+
+viewBgBtn.addEventListener("click", () => {
+  window.open("./assets/menu-bg-clean.jpg", "_blank");
+});
+
+window.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    startGame();
   }
-
-  playButton?.addEventListener("click", startGame);
-
-  window.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
-      startGame();
-    }
-  });
-})();
+});
