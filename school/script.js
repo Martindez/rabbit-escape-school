@@ -7,7 +7,6 @@ const rooms = {
   Exit: ["Playground"]
 };
 
-/* Centered positions for player, killer, keys, and flashlight */
 const roomPositions = {
   Electrical: { top: 22, left: 20 },
   Gym: { top: 22, left: 50 },
@@ -33,6 +32,7 @@ let audioContext = null;
 let playerLight = null;
 
 const ui = {
+  ambientMusic: document.getElementById("ambientMusic"),
   startScreen: document.getElementById("startScreen"),
   hud: document.getElementById("hud"),
   gameWrap: document.getElementById("gameWrap"),
@@ -66,6 +66,16 @@ ui.nextLevelBtn.addEventListener("click", () => {
 ui.roomButtons.forEach((button) => {
   button.addEventListener("click", () => movePlayer(button.dataset.room));
 });
+
+function startAmbientMusic() {
+  const muted = localStorage.getItem("rabbitEscapeMuted") === "true";
+
+  if (!ui.ambientMusic || muted) return;
+
+  ui.ambientMusic.volume = 0.35;
+  ui.ambientMusic.muted = false;
+  ui.ambientMusic.play().catch(() => {});
+}
 
 function createPlayerLight() {
   if (playerLight) return;
@@ -106,6 +116,7 @@ function playTone(frequency, duration, type = "sine", volume = 0.04) {
 
 function startGame() {
   initAudio();
+  startAmbientMusic();
   createPlayerLight();
 
   gameState = {
@@ -199,6 +210,7 @@ function checkWin() {
     ui.hud.classList.add("hidden");
     ui.gameWrap.classList.add("hidden");
     ui.endScreen.classList.remove("hidden");
+
     playTone(523, 0.12, "triangle", 0.05);
     setTimeout(() => playTone(659, 0.12, "triangle", 0.05), 120);
     setTimeout(() => playTone(784, 0.18, "triangle", 0.05), 240);
