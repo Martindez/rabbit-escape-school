@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Still Insane - Church</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <audio id="ambientMusic" src="../assets/game-ambient.mp3" loop preload="auto"></audio>
+  <audio id="jumpscareSound" src="../assets/jumpscare.mp3" preload="auto"></audio>
+
+  <div id="flashOverlay" class="flash-overlay"></div>
+
+  <div id="jumpscareOverlay" class="jumpscare-overlay hidden">
+    <img src="../assets/killer.png" alt="" class="jumpscare-killer" draggable="false" />
+    <div class="jumpscare-text">CAUGHT!</div>
+  </div>
+
+  <main class="app">
+    <header class="topbar">
+      <h1>Still Insane</h1>
+      <p>Level 4 · Church Hardmode</p>
+    </header>
+
+    <section id="hud" class="panel">
+      <div class="hud-grid">
+        <div><strong>Keys:</strong> <span id="keyCount">0</span>/6</div>
+        <div><strong>Hearts:</strong> <span id="hearts">❤️</span></div>
+        <div><strong>Player:</strong> <span id="playerRoom">Entrance</span></div>
+        <div><strong>Killer:</strong> <span id="killerRoom">Bell Tower</span></div>
+        <div><strong>Exit:</strong> <span id="exitState">Locked</span></div>
+      </div>
+      <p id="messageText" class="message">Find 6 keys and escape the church.</p>
+    </section>
+
+    <section id="gameWrap" class="panel">
+      <div class="map-board">
+        <img src="./assets/church.jpg" alt="Church map" class="map-image" />
+
+        <button class="room-hotspot bell-tower" data-room="Bell Tower" type="button"></button>
+        <button class="room-hotspot storage" data-room="Storage" type="button"></button>
+        <button class="room-hotspot main-hall" data-room="Main Hall" type="button"></button>
+        <button class="room-hotspot confession" data-room="Confession" type="button"></button>
+        <button class="room-hotspot altar" data-room="Altar" type="button"></button>
+        <button class="room-hotspot entrance" data-room="Entrance" type="button"></button>
+        <button class="room-hotspot basement" data-room="Basement" type="button"></button>
+        <button class="room-hotspot graveyard" data-room="Graveyard" type="button"></button>
+        <button class="room-hotspot exit-room" data-room="Exit" type="button"></button>
+
+        <div id="keyLayer" class="key-layer"></div>
+
+        <img id="playerToken" class="token player-token" src="../assets/player.png" alt="Player" />
+        <img id="killerToken" class="token killer-token" src="../assets/killer.png" alt="Killer" />
+      </div>
+    </section>
+
+    <section id="endScreen" class="panel screen hidden">
+      <h2 id="endTitle">You Escaped!</h2>
+      <p id="endText">You survived the church.</p>
+      <button id="restartBtn" class="main-btn" type="button">Play Again</button>
+      <button id="menuBtn" class="main-btn" type="button">Main Menu</button>
+    </section>
+  </main>
+
+  <script src="./script.js"></script>
+</body>
+</html>
