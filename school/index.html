@@ -22,12 +22,7 @@
       <p>Level 1 · School</p>
     </header>
 
-    <section id="startScreen" class="panel screen">
-      <h2>School Escape</h2>
-      <button id="startBtn" class="main-btn" type="button">Start</button>
-    </section>
-
-    <section id="hud" class="panel hidden">
+    <section id="hud" class="panel">
       <div class="hud-grid">
         <div><strong>Keys:</strong> <span id="keyCount">0</span>/4</div>
         <div><strong>Hearts:</strong> <span id="hearts">❤️ ❤️ ❤️</span></div>
@@ -38,7 +33,7 @@
       <p id="messageText" class="message">Find 4 keys and escape.</p>
     </section>
 
-    <section id="gameWrap" class="panel hidden">
+    <section id="gameWrap" class="panel">
       <div class="map-board">
         <img src="./assets/map.jpg" alt="School map" class="map-image" />
 
@@ -48,13 +43,6 @@
         <button class="room-hotspot security" data-room="Security" type="button"></button>
         <button class="room-hotspot playground" data-room="Playground" type="button"></button>
         <button class="room-hotspot exit-room" data-room="Exit" type="button"></button>
-
-        <div class="room-ring electrical-ring" data-ring="Electrical"></div>
-        <div class="room-ring gym-ring" data-ring="Gym"></div>
-        <div class="room-ring kitchen-ring" data-ring="Kitchen"></div>
-        <div class="room-ring security-ring" data-ring="Security"></div>
-        <div class="room-ring playground-ring" data-ring="Playground"></div>
-        <div class="room-ring exit-ring" data-ring="Exit"></div>
 
         <div id="keyLayer" class="key-layer"></div>
 
