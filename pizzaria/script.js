@@ -49,11 +49,9 @@ let playerLight = null;
 
 const ui = {
   ambientMusic: document.getElementById("ambientMusic"),
-  startScreen: document.getElementById("startScreen"),
   hud: document.getElementById("hud"),
   gameWrap: document.getElementById("gameWrap"),
   endScreen: document.getElementById("endScreen"),
-  startBtn: document.getElementById("startBtn"),
   restartBtn: document.getElementById("restartBtn"),
   menuBtn: document.getElementById("menuBtn"),
   keyCount: document.getElementById("keyCount"),
@@ -73,19 +71,22 @@ const ui = {
   roomButtons: document.querySelectorAll(".room-hotspot")
 };
 
-ui.startBtn.addEventListener("click", startGame);
-ui.restartBtn.addEventListener("click", resetGame);
+ui.restartBtn.addEventListener("click", startGame);
 ui.menuBtn.addEventListener("click", () => {
   window.location.href = "../";
 });
 
 ui.roomButtons.forEach((button) => {
-  button.addEventListener("click", () => movePlayer(button.dataset.room));
+  button.addEventListener("click", () => {
+    startAmbientMusic();
+    movePlayer(button.dataset.room);
+  });
 });
+
+document.addEventListener("pointerdown", startAmbientMusic);
 
 function startAmbientMusic() {
   const muted = localStorage.getItem("rabbitEscapeMuted") === "true";
-
   if (!ui.ambientMusic || muted) return;
 
   ui.ambientMusic.volume = 0.35;
@@ -95,7 +96,6 @@ function startAmbientMusic() {
 
 function createPlayerLight() {
   if (playerLight) return;
-
   playerLight = document.createElement("div");
   playerLight.className = "player-light";
   ui.mapBoard.appendChild(playerLight);
@@ -144,17 +144,12 @@ function startGame() {
     gameStarted: true
   };
 
-  ui.startScreen.classList.add("hidden");
   ui.endScreen.classList.add("hidden");
   ui.hud.classList.remove("hidden");
   ui.gameWrap.classList.remove("hidden");
 
   showMessage("Find all 5 keys, then go to the Exit.");
   updateUI();
-}
-
-function resetGame() {
-  startGame();
 }
 
 function movePlayer(room) {
@@ -311,5 +306,4 @@ function shuffle(array) {
   return array.sort(() => Math.random() - 0.5);
 }
 
-createPlayerLight();
-updateUI();
+startGame();

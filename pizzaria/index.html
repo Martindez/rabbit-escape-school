@@ -22,12 +22,7 @@
       <p>Level 2 · Pizzaria</p>
     </header>
 
-    <section id="startScreen" class="panel screen">
-      <h2>Pizzaria Escape</h2>
-      <button id="startBtn" class="main-btn" type="button">Start</button>
-    </section>
-
-    <section id="hud" class="panel hidden">
+    <section id="hud" class="panel">
       <div class="hud-grid">
         <div><strong>Keys:</strong> <span id="keyCount">0</span>/5</div>
         <div><strong>Hearts:</strong> <span id="hearts">❤️ ❤️ ❤️</span></div>
@@ -38,7 +33,7 @@
       <p id="messageText" class="message">Find 5 keys and escape.</p>
     </section>
 
-    <section id="gameWrap" class="panel hidden">
+    <section id="gameWrap" class="panel">
       <div class="map-board">
         <img src="./assets/map.jpg" alt="Pizzaria map" class="map-image" />
 
@@ -51,16 +46,6 @@
         <button class="room-hotspot delivery" data-room="Delivery" type="button"></button>
         <button class="room-hotspot oven" data-room="Oven" type="button"></button>
         <button class="room-hotspot exit-room" data-room="Exit" type="button"></button>
-
-        <div class="room-ring kitchen-ring" data-ring="Kitchen"></div>
-        <div class="room-ring storage-ring" data-ring="Storage"></div>
-        <div class="room-ring staff-ring" data-ring="Staff"></div>
-        <div class="room-ring arcade-ring" data-ring="Arcade"></div>
-        <div class="room-ring dining-ring" data-ring="Dining"></div>
-        <div class="room-ring bath-ring" data-ring="Bath"></div>
-        <div class="room-ring delivery-ring" data-ring="Delivery"></div>
-        <div class="room-ring oven-ring" data-ring="Oven"></div>
-        <div class="room-ring exit-ring" data-ring="Exit"></div>
 
         <div id="keyLayer" class="key-layer"></div>
 
