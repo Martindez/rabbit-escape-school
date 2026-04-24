@@ -1,44 +1,32 @@
 const menuMusic = document.getElementById("menuMusic");
-const muteBtn = document.getElementById("muteBtn");
 const playBtn = document.getElementById("playBtn");
 const readBtn = document.getElementById("readBtn");
-const closeReadBtn = document.getElementById("closeReadBtn");
+const muteBtn = document.getElementById("muteBtn");
 const readPanel = document.getElementById("readPanel");
-const loading = document.getElementById("loading");
-const soundHint = document.getElementById("soundHint");
+const closeReadBtn = document.getElementById("closeReadBtn");
 
 let muted = localStorage.getItem("rabbitEscapeMuted") === "true";
-let musicStarted = false;
 
-menuMusic.volume = 0.55;
+menuMusic.volume = 0.5;
 menuMusic.muted = muted;
 
 function updateMuteButton() {
-  muteBtn.textContent = muted ? "UNMUTE" : "MUTE";
-  muteBtn.classList.toggle("muted", muted);
+  muteBtn.textContent = muted ? "Unmute" : "Mute";
 }
 
-async function startMusic() {
-  if (muted || musicStarted) return;
-
-  try {
-    menuMusic.currentTime = menuMusic.currentTime || 0;
-    await menuMusic.play();
-    musicStarted = true;
-    soundHint.classList.add("hide");
-  } catch (error) {
-    soundHint.classList.remove("hide");
+function startMusic() {
+  if (!muted) {
+    menuMusic.play().catch(() => {});
   }
 }
 
 function toggleMute() {
   muted = !muted;
   menuMusic.muted = muted;
-  localStorage.setItem("rabbitEscapeMuted", String(muted));
+  localStorage.setItem("rabbitEscapeMuted", muted);
 
   if (muted) {
     menuMusic.pause();
-    musicStarted = false;
   } else {
     startMusic();
   }
@@ -47,50 +35,28 @@ function toggleMute() {
 }
 
 function startGame() {
-  startMusic();
-
-  playBtn.disabled = true;
-  readBtn.disabled = true;
-  playBtn.textContent = "Loading...";
-
-  loading.classList.add("show");
-  loading.setAttribute("aria-hidden", "false");
-
-  setTimeout(() => {
-    window.location.href = "./school/";
-  }, 700);
+  window.location.href = "./school/";
 }
 
 function openReadMe() {
-  startMusic();
   readPanel.classList.add("show");
-  readPanel.setAttribute("aria-hidden", "false");
 }
 
 function closeReadMe() {
   readPanel.classList.remove("show");
-  readPanel.setAttribute("aria-hidden", "true");
 }
 
-document.addEventListener("pointerdown", startMusic);
-document.addEventListener("keydown", startMusic);
-
-muteBtn.addEventListener("click", toggleMute);
 playBtn.addEventListener("click", startGame);
 readBtn.addEventListener("click", openReadMe);
+muteBtn.addEventListener("click", toggleMute);
 closeReadBtn.addEventListener("click", closeReadMe);
 
 readPanel.addEventListener("click", (event) => {
-  if (event.target === readPanel) closeReadMe();
-});
-
-window.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") closeReadMe();
-
-  if (event.key === "Enter" && !readPanel.classList.contains("show")) {
-    startGame();
+  if (event.target === readPanel) {
+    closeReadMe();
   }
 });
 
+document.addEventListener("click", startMusic, { once: true });
+
 updateMuteButton();
-startMusic();
