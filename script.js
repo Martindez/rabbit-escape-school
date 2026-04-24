@@ -5,26 +5,29 @@ const readBtn = document.getElementById("readBtn");
 const closeReadBtn = document.getElementById("closeReadBtn");
 const readPanel = document.getElementById("readPanel");
 const loading = document.getElementById("loading");
+const soundHint = document.getElementById("soundHint");
 
-let musicStarted = false;
 let muted = localStorage.getItem("rabbitEscapeMuted") === "true";
+let musicStarted = false;
 
-menuMusic.volume = 0.42;
+menuMusic.volume = 0.55;
 menuMusic.muted = muted;
 
 function updateMuteButton() {
-  muteBtn.textContent = muted ? "Music: OFF" : "Music: ON";
+  muteBtn.textContent = muted ? "UNMUTE" : "MUTE";
+  muteBtn.classList.toggle("muted", muted);
 }
 
 async function startMusic() {
-  if (musicStarted || muted) return;
+  if (muted || musicStarted) return;
 
   try {
+    menuMusic.currentTime = menuMusic.currentTime || 0;
     await menuMusic.play();
     musicStarted = true;
-  } catch {
-    document.addEventListener("click", startMusic, { once: true });
-    document.addEventListener("keydown", startMusic, { once: true });
+    soundHint.classList.add("hide");
+  } catch (error) {
+    soundHint.classList.remove("hide");
   }
 }
 
@@ -33,18 +36,14 @@ function toggleMute() {
   menuMusic.muted = muted;
   localStorage.setItem("rabbitEscapeMuted", String(muted));
 
-  if (!muted) {
+  if (muted) {
+    menuMusic.pause();
+    musicStarted = false;
+  } else {
     startMusic();
   }
 
   updateMuteButton();
-}
-
-function playHoverSound() {
-  if (muted) return;
-
-  const sound = new Audio("./assets/menu-theme.mp3");
-  sound.volume = 0;
 }
 
 function startGame() {
@@ -72,6 +71,9 @@ function closeReadMe() {
   readPanel.classList.remove("show");
   readPanel.setAttribute("aria-hidden", "true");
 }
+
+document.addEventListener("pointerdown", startMusic);
+document.addEventListener("keydown", startMusic);
 
 muteBtn.addEventListener("click", toggleMute);
 playBtn.addEventListener("click", startGame);

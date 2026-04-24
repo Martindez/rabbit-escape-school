@@ -9,14 +9,16 @@
 <body>
   <audio id="menuMusic" src="./assets/menu-theme.mp3" loop preload="auto"></audio>
 
+  <div class="bg"></div>
+  <div class="darkness"></div>
+
   <main class="menu">
-    <div class="top-controls">
-      <button id="muteBtn" class="icon-btn" type="button">Music: ON</button>
-    </div>
+    <button id="muteBtn" class="mute-btn" type="button">MUTE</button>
 
     <section class="menu-panel">
       <button id="playBtn" class="menu-btn play" type="button">Play Game</button>
       <button id="readBtn" class="menu-btn read" type="button">Read Me</button>
+      <p id="soundHint" class="sound-hint">Click anywhere to enable sound</p>
     </section>
 
     <section id="readPanel" class="read-panel" aria-hidden="true">
@@ -24,8 +26,8 @@
         <button id="closeReadBtn" class="close-btn" type="button">×</button>
         <h2>Warning</h2>
         <p>The rabbit is hunting you.</p>
-        <p>Find every key, move between rooms, and escape before it catches you.</p>
-        <p class="danger-text">Do not wait too long.</p>
+        <p>Find the keys, move room to room, and escape before it catches you.</p>
+        <p class="danger-text">Do not let the danger rise.</p>
       </div>
     </section>
 
