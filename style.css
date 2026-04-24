@@ -12,19 +12,24 @@ body {
 
 body {
   background: #000;
-  overflow: hidden;
-  font-family: Arial, Helvetica, sans-serif;
   color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
+/* MAIN MENU */
 .menu-screen {
   position: relative;
   width: 100vw;
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
+  background: black;
 }
 
+/* REAL IMAGE BACKGROUND */
 .moving-bg {
   position: absolute;
   top: -4%;
@@ -33,30 +38,51 @@ body {
   height: 108%;
   object-fit: cover;
   z-index: 1;
-  animation: slowZoom 12s ease-in-out infinite alternate;
+  animation: slowZoom 13s ease-in-out infinite alternate;
 }
 
-.rain,
-.fog,
+/* RAIN EFFECT */
+.rain {
+  position: absolute;
+  inset: -120px;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.18;
+  background-image: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.2) 0px,
+    rgba(255, 255, 255, 0.2) 1px,
+    transparent 1px,
+    transparent 9px
+  );
+  animation: rainMove 0.45s linear infinite;
+}
+
+/* FOG EFFECT */
+.fog {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.6;
+  background:
+    radial-gradient(circle at 18% 70%, rgba(255, 255, 255, 0.12), transparent 35%),
+    radial-gradient(circle at 80% 35%, rgba(255, 255, 255, 0.08), transparent 40%);
+  animation: fogMove 8s ease-in-out infinite alternate;
+}
+
+/* DARK CINEMATIC OVERLAY */
 .dark-vignette {
   position: absolute;
   inset: 0;
-  pointer-events: none;
-}
-
-.rain {
-  z-index: 2;
-}
-
-.fog {
-  z-index: 3;
-}
-
-.dark-vignette {
   z-index: 4;
-  background: rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+  background:
+    radial-gradient(circle at center, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.55)),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.35));
 }
 
+/* BUTTON LAYER */
 .menu-content {
   position: absolute;
   inset: 0;
@@ -67,7 +93,7 @@ body {
 .menu-buttons {
   position: absolute;
   left: 50%;
-  bottom: 34px;
+  bottom: max(34px, env(safe-area-inset-bottom));
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
@@ -76,30 +102,187 @@ body {
 }
 
 .menu-btn {
-  width: 290px;
+  width: min(290px, 78vw);
   padding: 15px 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.78);
   color: white;
-  border: 2px solid red;
+  border: 2px solid rgba(255, 35, 35, 0.95);
   border-radius: 8px;
-  font-size: 22px;
+  font-size: clamp(1rem, 3vw, 1.35rem);
   font-weight: 900;
   letter-spacing: 5px;
   cursor: pointer;
   text-shadow: 0 0 10px red;
-  box-shadow: 0 0 20px red;
+  box-shadow:
+    0 0 16px rgba(255, 0, 0, 0.5),
+    inset 0 0 16px rgba(255, 0, 0, 0.16);
+  backdrop-filter: blur(5px);
+  animation: buttonPulse 2s ease-in-out infinite alternate;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
-.menu-btn:hover {
+.menu-btn:hover,
+.menu-btn:active {
+  transform: scale(1.06);
+  background: rgba(120, 0, 0, 0.86);
+  box-shadow:
+    0 0 32px rgba(255, 0, 0, 0.95),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+.play-btn {
+  border-color: rgba(255, 220, 95, 0.95);
+  box-shadow:
+    0 0 18px rgba(255, 210, 80, 0.45),
+    inset 0 0 16px rgba(255, 255, 255, 0.1);
+}
+
+/* README POPUP */
+#readmeOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.readme-box {
+  width: min(520px, 100%);
+  max-height: 85vh;
+  overflow-y: auto;
+  background: #111;
+  border: 2px solid #d81f26;
+  border-radius: 18px;
+  padding: 26px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.35);
+  animation: popIn 0.22s ease;
+}
+
+.readme-box h2 {
+  margin-bottom: 4px;
+  color: #ff2b33;
+  font-size: 2rem;
+}
+
+.readme-box h3 {
+  margin-top: 18px;
+  margin-bottom: 8px;
+  color: #ffd66b;
+}
+
+.readme-box p {
+  line-height: 1.5;
+}
+
+.readme-box ul {
+  text-align: left;
+  padding-left: 24px;
+  line-height: 1.7;
+}
+
+.small-text {
+  color: #ccc;
+  margin-bottom: 18px;
+}
+
+.close-readme {
+  margin-top: 20px;
+  background: #d81f26;
+  color: white;
+  border: 0;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.close-readme:hover {
   transform: scale(1.05);
+  background: #ff2b33;
 }
 
+/* ANIMATIONS */
 @keyframes slowZoom {
   from {
-    transform: scale(1);
+    transform: scale(1) translate(0, 0);
+    filter: brightness(0.95);
   }
 
   to {
-    transform: scale(1.06);
+    transform: scale(1.07) translate(-1.5%, -1%);
+    filter: brightness(1.08);
+  }
+}
+
+@keyframes rainMove {
+  from {
+    transform: translateY(-80px);
+  }
+
+  to {
+    transform: translateY(80px);
+  }
+}
+
+@keyframes fogMove {
+  from {
+    transform: translateX(-35px);
+    opacity: 0.35;
+  }
+
+  to {
+    transform: translateX(35px);
+    opacity: 0.75;
+  }
+}
+
+@keyframes buttonPulse {
+  from {
+    box-shadow:
+      0 0 12px rgba(255, 0, 0, 0.35),
+      inset 0 0 10px rgba(255, 0, 0, 0.08);
+  }
+
+  to {
+    box-shadow:
+      0 0 28px rgba(255, 0, 0, 0.75),
+      inset 0 0 20px rgba(255, 0, 0, 0.18);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* MOBILE */
+@media (max-width: 700px) {
+  .menu-buttons {
+    bottom: max(28px, env(safe-area-inset-bottom));
+    gap: 10px;
+  }
+
+  .menu-btn {
+    width: min(240px, 76vw);
+    padding: 12px 0;
+    letter-spacing: 3px;
   }
 }
