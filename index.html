@@ -2,58 +2,120 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
   <title>Rabbit Escape</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta
+    name="description"
+    content="Escape the killer rabbit. Find keys, move room to room, and survive."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
-  <div class="menu-shell">
-    <div class="menu-overlay"></div>
+  <div class="bg-overlay"></div>
+  <div class="bg-vignette"></div>
+  <div class="noise"></div>
 
-    <main class="menu-content">
-      <section class="menu-panel">
+  <main class="menu-shell">
+    <section class="hero-card">
+      <div class="hero-topline">GitHub Pages Horror Game</div>
 
-        <div class="menu-title-wrap">
-          <h1>Rabbit Escape</h1>
-          <p>Collect keys. Escape. Survive.</p>
-        </div>
+      <h1 class="game-title">
+        <span class="title-main">Rabbit Escape</span>
+        <span class="title-glow"></span>
+      </h1>
 
-        <div class="menu-buttons">
-          <button id="playBtn" class="menu-btn primary">
-            Play Level 1
-          </button>
+      <p class="game-subtitle">
+        Move room to room. Collect glowing keys. Stay ahead of the killer rabbit.
+      </p>
 
-          <button id="level2Btn" class="menu-btn secondary">
-            Play Level 2
-          </button>
-        </div>
+      <div class="cta-row">
+        <a class="menu-button primary" href="./school/" data-hover="school">
+          <span class="button-label">Play Level 1</span>
+          <span class="button-sub">School</span>
+        </a>
 
-        <div class="level-cards">
+        <a class="menu-button secondary" href="./pizzaria/" data-hover="pizzaria">
+          <span class="button-label">Play Level 2</span>
+          <span class="button-sub">Pizzaria</span>
+        </a>
+      </div>
 
-          <button class="level-card level1" id="cardLevel1">
-            <span class="level-label">LEVEL 1</span>
-            <strong>School Escape</strong>
-            <span>Collect 4 keys and escape</span>
-          </button>
-
-          <button class="level-card level2" id="cardLevel2">
-            <span class="level-label">LEVEL 2</span>
-            <strong>Venezia Pizzaria</strong>
-            <span>Collect 5 keys and escape</span>
-          </button>
-
-          <div class="level-card locked">
-            <span class="level-label">LEVEL 3</span>
-            <strong>Coming Soon</strong>
-            <span>More maps later</span>
+      <div class="level-grid">
+        <article class="level-card" data-card="school">
+          <div class="level-head">
+            <span class="level-tag">Level 1</span>
+            <h2>School</h2>
           </div>
+          <p>
+            Search classrooms and halls for keys while the rabbit closes in.
+          </p>
+          <ul class="feature-list">
+            <li>Room hotspots</li>
+            <li>Visible key spawns</li>
+            <li>Danger pressure</li>
+          </ul>
+        </article>
 
-        </div>
+        <article class="level-card" data-card="pizzaria">
+          <div class="level-head">
+            <span class="level-tag">Level 2</span>
+            <h2>Pizzaria</h2>
+          </div>
+          <p>
+            Escape across connected rooms, track danger, and survive the hunt.
+          </p>
+          <ul class="feature-list">
+            <li>Cleaner room flow</li>
+            <li>Enemy pressure</li>
+            <li>End screens</li>
+          </ul>
+        </article>
+      </div>
+    </section>
 
-      </section>
-    </main>
-  </div>
+    <aside class="info-panel">
+      <div class="panel-block">
+        <div class="panel-label">How to Play</div>
+        <ul class="panel-list">
+          <li>Click connected rooms to move.</li>
+          <li>Pick up glowing keys inside rooms.</li>
+          <li>Avoid the killer rabbit.</li>
+          <li>Reach the exit before you run out of chances.</li>
+        </ul>
+      </div>
 
-  <script src="script.js"></script>
+      <div class="panel-block">
+        <div class="panel-label">Game Style</div>
+        <p class="panel-text">
+          Fast room-to-room horror with visible objectives, rising danger, and
+          simple readable UI.
+        </p>
+      </div>
+
+      <div class="panel-block panel-controls">
+        <div class="panel-label">Menu</div>
+        <button id="ambientToggle" class="small-control" type="button" aria-pressed="false">
+          Ambient Glow: ON
+        </button>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="menu-footer">
+    <span>Rabbit Escape</span>
+    <span class="footer-dot"></span>
+    <span>School + Pizzaria</span>
+  </footer>
+
+  <script src="./script.js"></script>
 </body>
 </html>
