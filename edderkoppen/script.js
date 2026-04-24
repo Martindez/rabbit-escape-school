@@ -71,6 +71,10 @@ const ui = {
 
 ui.restartBtn.addEventListener("click", startGame);
 
+ui.nextLevelBtn.addEventListener("click", () => {
+  window.location.href = "../church/";
+});
+
 ui.menuBtn.addEventListener("click", () => {
   window.location.href = "../";
 });
@@ -83,6 +87,8 @@ ui.roomButtons.forEach((button) => {
 });
 
 document.addEventListener("pointerdown", startAmbientMusic);
+document.addEventListener("click", startAmbientMusic);
+document.addEventListener("touchstart", startAmbientMusic);
 
 function startAmbientMusic() {
   const muted = localStorage.getItem("rabbitEscapeMuted") === "true";
@@ -109,7 +115,8 @@ function playJumpscareSound() {
 }
 
 function createPlayerLight() {
-  if (playerLight) return;
+  if (playerLight || !ui.mapBoard) return;
+
   playerLight = document.createElement("div");
   playerLight.className = "player-light";
   ui.mapBoard.appendChild(playerLight);
@@ -161,10 +168,7 @@ function startGame() {
   ui.endScreen.classList.add("hidden");
   ui.hud.classList.remove("hidden");
   ui.gameWrap.classList.remove("hidden");
-
-  if (ui.nextLevelBtn) {
-    ui.nextLevelBtn.classList.add("hidden");
-  }
+  ui.nextLevelBtn.classList.add("hidden");
 
   showMessage("Find all 4 keys, then escape through Gangen.");
   updateUI();
@@ -226,17 +230,14 @@ function checkDanger() {
 function checkWin() {
   if (gameState.playerRoom === "Gangen" && gameState.collectedKeys.length >= totalKeys) {
     gameState.gameStarted = false;
-    stopAmbientMusic();
 
-    ui.endTitle.textContent = "YOU SURVIVED!";
-    ui.endText.textContent = "You escaped all 3 levels of Still Insane!";
+    ui.endTitle.textContent = "You Escaped!";
+    ui.endText.textContent = "You escaped Edderkoppen. Final stop: Church.";
+    ui.nextLevelBtn.textContent = "Final Level";
+    ui.nextLevelBtn.classList.remove("hidden");
     ui.hud.classList.add("hidden");
     ui.gameWrap.classList.add("hidden");
     ui.endScreen.classList.remove("hidden");
-
-    if (ui.nextLevelBtn) {
-      ui.nextLevelBtn.classList.add("hidden");
-    }
 
     playTone(523, 0.12, "triangle", 0.05);
     setTimeout(() => playTone(659, 0.12, "triangle", 0.05), 120);
@@ -250,12 +251,9 @@ function loseGame() {
 
   ui.endTitle.textContent = "Caught!";
   ui.endText.textContent = "The killer found you.";
+  ui.nextLevelBtn.classList.add("hidden");
   ui.hud.classList.add("hidden");
   ui.gameWrap.classList.add("hidden");
-
-  if (ui.nextLevelBtn) {
-    ui.nextLevelBtn.classList.add("hidden");
-  }
 
   setTimeout(() => {
     ui.endScreen.classList.remove("hidden");
@@ -267,8 +265,7 @@ function updateUI() {
   ui.hearts.textContent = gameState.hearts > 0 ? "❤️" : "💔";
   ui.playerRoom.textContent = gameState.playerRoom;
   ui.killerRoom.textContent = gameState.killerRoom;
-  ui.exitState.textContent =
-    gameState.collectedKeys.length >= totalKeys ? "Open" : "Locked";
+  ui.exitState.textContent = gameState.collectedKeys.length >= totalKeys ? "Open" : "Locked";
 
   moveToken(ui.playerToken, gameState.playerRoom);
   moveToken(ui.killerToken, gameState.killerRoom);
@@ -324,6 +321,7 @@ function flash() {
 
 function showJumpscare() {
   ui.jumpscareOverlay.classList.remove("hidden");
+
   setTimeout(() => {
     ui.jumpscareOverlay.classList.add("hidden");
   }, 900);
