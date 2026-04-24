@@ -54,6 +54,7 @@ const ui = {
   gameWrap: document.getElementById("gameWrap"),
   endScreen: document.getElementById("endScreen"),
   restartBtn: document.getElementById("restartBtn"),
+  nextLevelBtn: document.getElementById("nextLevelBtn"),
   menuBtn: document.getElementById("menuBtn"),
   keyCount: document.getElementById("keyCount"),
   hearts: document.getElementById("hearts"),
@@ -73,6 +74,11 @@ const ui = {
 };
 
 ui.restartBtn.addEventListener("click", startGame);
+
+ui.nextLevelBtn.addEventListener("click", () => {
+  window.location.href = "../edderkoppen/";
+});
+
 ui.menuBtn.addEventListener("click", () => {
   window.location.href = "../";
 });
@@ -163,6 +169,7 @@ function startGame() {
   ui.endScreen.classList.add("hidden");
   ui.hud.classList.remove("hidden");
   ui.gameWrap.classList.remove("hidden");
+  ui.nextLevelBtn.classList.add("hidden");
 
   showMessage("Find all 5 keys, then go to the Exit.");
   updateUI();
@@ -225,7 +232,8 @@ function checkWin() {
   if (gameState.playerRoom === "Exit" && gameState.collectedKeys.length >= totalKeys) {
     gameState.gameStarted = false;
     ui.endTitle.textContent = "You Escaped!";
-    ui.endText.textContent = "You escaped the pizzaria. You beat the game!";
+    ui.endText.textContent = "You escaped the pizzaria. Next stop: Edderkoppen.";
+    ui.nextLevelBtn.classList.remove("hidden");
     ui.hud.classList.add("hidden");
     ui.gameWrap.classList.add("hidden");
     ui.endScreen.classList.remove("hidden");
@@ -242,6 +250,7 @@ function loseGame() {
 
   ui.endTitle.textContent = "Caught!";
   ui.endText.textContent = "The killer rabbit found you.";
+  ui.nextLevelBtn.classList.add("hidden");
   ui.hud.classList.add("hidden");
   ui.gameWrap.classList.add("hidden");
 
