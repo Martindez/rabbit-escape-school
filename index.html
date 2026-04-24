@@ -6,15 +6,12 @@
 
   <title>Still Insane</title>
 
-  <!-- iPhone App Mode -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Still Insane" />
 
-  <!-- Icon -->
   <link rel="apple-touch-icon" href="assets/killer.png" />
   <link rel="icon" href="assets/killer.png" />
-
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -22,15 +19,23 @@
   <audio id="menuMusic" src="assets/game-ambient.mp3" loop preload="auto"></audio>
 
   <main class="menu-screen">
-    <div class="menu-overlay">
+    <div class="dark-vignette"></div>
+    <div class="noise"></div>
+
+    <section class="menu-content">
+      <div class="game-title">
+        <h1>STILL INSANE</h1>
+        <p>Three levels. One way out.</p>
+      </div>
 
       <div class="menu-buttons">
-        <button class="menu-btn" onclick="playGame()">PLAY</button>
+        <button class="menu-btn play-btn" onclick="playGame()">PLAY</button>
         <button class="menu-btn" id="muteBtn" onclick="toggleMute()">MUTE</button>
         <button class="menu-btn" onclick="openReadMe()">READ ME</button>
       </div>
 
-    </div>
+      <p class="credit">A school project by Martin</p>
+    </section>
   </main>
 
   <script src="script.js"></script>
