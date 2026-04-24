@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const secretWord = "MONSTER";
+  const totalRelics = 6;
 
   const allChurchRelicRooms = [
     "Bell Tower",
@@ -39,14 +40,11 @@ document.addEventListener("DOMContentLoaded", () => {
   let relicLetters = {};
   let hiddenLetterIndex = 0;
 
-  const totalRelics = 6;
-
   let exitTimer = null;
   let killerTimer = null;
   let exitTimeLeft = 5;
   let audioContext = null;
   let playerLight = null;
-
   let playerMovedSinceLastKillerStep = false;
 
   let gameState = {
@@ -62,28 +60,32 @@ document.addEventListener("DOMContentLoaded", () => {
     ambientMusic: document.getElementById("ambientMusic"),
     chaseMusic: document.getElementById("chaseMusic"),
     laughterSound: document.getElementById("laughterSound"),
-    footstepsSound: document.getElementById("footstepsSound"),
     jumpscareSound: document.getElementById("jumpscareSound"),
+
     hud: document.getElementById("hud"),
     gameWrap: document.getElementById("gameWrap"),
     endScreen: document.getElementById("endScreen"),
     restartBtn: document.getElementById("restartBtn"),
     menuBtn: document.getElementById("menuBtn"),
+
     keyCount: document.getElementById("keyCount"),
     hearts: document.getElementById("hearts"),
     playerRoom: document.getElementById("playerRoom"),
     killerRoom: document.getElementById("killerRoom"),
     exitState: document.getElementById("exitState"),
     messageText: document.getElementById("messageText"),
+    lettersText: document.getElementById("lettersText"),
+
     endTitle: document.getElementById("endTitle"),
     endText: document.getElementById("endText"),
+
     playerToken: document.getElementById("playerToken"),
     killerToken: document.getElementById("killerToken"),
     flashOverlay: document.getElementById("flashOverlay"),
     jumpscareOverlay: document.getElementById("jumpscareOverlay"),
     mapBoard: document.querySelector(".map-board"),
     roomButtons: document.querySelectorAll(".room-hotspot"),
-    lettersText: document.getElementById("lettersText"),
+
     codeOverlay: document.getElementById("codeOverlay"),
     timerText: document.getElementById("timerText"),
     codeInput: document.getElementById("codeInput"),
@@ -101,9 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  if (ui.submitCodeBtn) {
-    ui.submitCodeBtn.addEventListener("click", submitExitCode);
-  }
+  if (ui.submitCodeBtn) ui.submitCodeBtn.addEventListener("click", submitExitCode);
 
   if (ui.codeInput) {
     ui.codeInput.addEventListener("keydown", (event) => {
@@ -132,15 +132,24 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function initAudio() {
+    if (!audioContext) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) audioContext = new AudioCtx();
+    }
+
+    if (audioContext && audioContext.state === "suspended") {
+      audioContext.resume();
+    }
+  }
+
   function startAmbientMusic() {
     const muted = localStorage.getItem("rabbitEscapeMuted") === "true";
-    if (muted) return;
+    if (muted || !ui.ambientMusic) return;
 
-    if (ui.ambientMusic) {
-      ui.ambientMusic.volume = 0.35;
-      ui.ambientMusic.muted = false;
-      ui.ambientMusic.play().catch(() => {});
-    }
+    ui.ambientMusic.volume = 0.35;
+    ui.ambientMusic.muted = false;
+    ui.ambientMusic.play().catch(() => {});
   }
 
   function updateMusicState() {
@@ -163,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function stopAllMusic() {
-    [ui.ambientMusic, ui.chaseMusic, ui.laughterSound, ui.footstepsSound].forEach((sound) => {
+    [ui.ambientMusic, ui.chaseMusic, ui.laughterSound].forEach((sound) => {
       if (!sound) return;
       sound.pause();
       sound.currentTime = 0;
@@ -172,33 +181,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function playJumpscareSound() {
     if (!ui.jumpscareSound) return;
+
     ui.jumpscareSound.currentTime = 0;
     ui.jumpscareSound.volume = 0.85;
     ui.jumpscareSound.play().catch(() => {});
-  }
-
-  function playFootsteps() {
-    const muted = localStorage.getItem("rabbitEscapeMuted") === "true";
-    if (muted || !ui.footstepsSound) return;
-
-    ui.footstepsSound.pause();
-    ui.footstepsSound.currentTime = 0;
-    ui.footstepsSound.volume = isKillerNear() ? 0.72 : 0.3;
-    ui.footstepsSound.play().catch(() => {});
   }
 
   function playLaughterCue() {
     const muted = localStorage.getItem("rabbitEscapeMuted") === "true";
     if (muted || !ui.laughterSound) return;
 
-    const killerNear = isKillerNear();
-
     ui.laughterSound.pause();
     ui.laughterSound.currentTime = 0;
-    ui.laughterSound.volume = killerNear ? 0.78 : 0.32;
+    ui.laughterSound.volume = isKillerNear() ? 0.78 : 0.32;
     ui.laughterSound.play().catch(() => {});
 
-    showMessage(killerNear ? "The laugh is close..." : "Something laughs somewhere in the church...");
+    showMessage(isKillerNear() ? "The laugh is close..." : "Something laughs somewhere in the church...");
   }
 
   function maybePlayScareCue() {
@@ -209,9 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (gameState.collectedRelics.length >= 5) chance = 0.22;
     if (isKillerNear()) chance += 0.12;
 
-    if (Math.random() < chance) {
-      playLaughterCue();
-    }
+    if (Math.random() < chance) playLaughterCue();
   }
 
   function maybeRingBell() {
@@ -224,20 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
       playTone(110, 0.35, "sine", 0.06);
       setTimeout(() => playTone(82, 0.45, "sine", 0.045), 180);
 
-      if (Math.random() < 0.3) {
-        moveKillerSmart();
-      }
-    }
-  }
-
-  function initAudio() {
-    if (!audioContext) {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (AudioCtx) audioContext = new AudioCtx();
-    }
-
-    if (audioContext && audioContext.state === "suspended") {
-      audioContext.resume();
+      if (Math.random() < 0.3) moveKillerSmart();
     }
   }
 
@@ -261,6 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function createPlayerLight() {
     if (playerLight || !ui.mapBoard) return;
+
     playerLight = document.createElement("div");
     playerLight.className = "player-light";
     ui.mapBoard.appendChild(playerLight);
@@ -302,14 +286,12 @@ document.addEventListener("DOMContentLoaded", () => {
     clearInterval(killerTimer);
 
     let speed = 6000;
-
     if (gameState.collectedRelics.length >= 2) speed = 5000;
     if (gameState.collectedRelics.length >= 4) speed = 4000;
     if (gameState.collectedRelics.length >= 5) speed = 3200;
 
     killerTimer = setInterval(() => {
-      if (!gameState.gameStarted) return;
-      if (gameState.exitChallengeStarted) return;
+      if (!gameState.gameStarted || gameState.exitChallengeStarted) return;
 
       if (playerMovedSinceLastKillerStep) {
         moveKillerSmart();
@@ -319,16 +301,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       playerMovedSinceLastKillerStep = false;
 
-      playFootsteps();
       maybePlayScareCue();
       maybeRingBell();
-
       checkDanger();
       updateUI();
 
-      if (gameState.gameStarted) {
-        dangerWarning();
-      }
+      if (gameState.gameStarted) dangerWarning();
     }, speed);
   }
 
@@ -355,11 +333,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     playerMovedSinceLastKillerStep = true;
-
     gameState.playerRoom = room;
-    playTone(430, 0.08, "triangle", 0.035);
-    playFootsteps();
 
+    playTone(430, 0.08, "triangle", 0.035);
     collectRelicIfNeeded();
 
     if (room === "Exit" && gameState.collectedRelics.length >= totalRelics) {
@@ -379,9 +355,7 @@ document.addEventListener("DOMContentLoaded", () => {
     checkDanger();
     updateUI();
 
-    if (gameState.gameStarted) {
-      dangerWarning();
-    }
+    if (gameState.gameStarted) dangerWarning();
   }
 
   function collectRelicIfNeeded() {
@@ -423,8 +397,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let bestDistance = -1;
 
     options.forEach((room) => {
-      const path = findShortestPath(room, gameState.playerRoom);
-      const distance = path.length;
+      const distance = findShortestPath(room, gameState.playerRoom).length;
 
       if (distance > bestDistance) {
         bestDistance = distance;
@@ -437,7 +410,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function moveKillerRandom() {
     const options = rooms[gameState.killerRoom].filter((room) => room !== "Exit");
-
     if (options.length > 0) {
       gameState.killerRoom = options[Math.floor(Math.random() * options.length)];
     }
@@ -466,11 +438,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function isKillerNear() {
     const connectedRooms = rooms[gameState.playerRoom] || [];
-
-    return (
-      connectedRooms.includes(gameState.killerRoom) ||
-      gameState.playerRoom === gameState.killerRoom
-    );
+    return connectedRooms.includes(gameState.killerRoom) || gameState.playerRoom === gameState.killerRoom;
   }
 
   function dangerWarning() {
@@ -624,11 +592,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const roomIndex = i > hiddenLetterIndex ? i - 1 : i;
       const room = relicRooms[roomIndex];
 
-      if (gameState.collectedRelics.includes(room)) {
-        letters.push(secretWord[i]);
-      } else {
-        letters.push("_");
-      }
+      letters.push(gameState.collectedRelics.includes(room) ? secretWord[i] : "_");
     }
 
     return letters.join(" ");
@@ -638,6 +602,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!token || !roomPositions[room]) return;
 
     const pos = roomPositions[room];
+
     token.style.top = `${pos.top}%`;
     token.style.left = `${pos.left}%`;
 
