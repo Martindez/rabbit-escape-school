@@ -231,6 +231,7 @@ function checkDanger() {
 function checkWin() {
   if (gameState.playerRoom === "Exit" && gameState.collectedKeys.length >= totalKeys) {
     gameState.gameStarted = false;
+
     ui.endTitle.textContent = "You Escaped!";
     ui.endText.textContent = "You escaped the pizzaria. Next stop: Edderkoppen.";
     ui.nextLevelBtn.classList.remove("hidden");
@@ -264,7 +265,8 @@ function updateUI() {
   ui.hearts.textContent = gameState.hearts > 0 ? "❤️" : "💔";
   ui.playerRoom.textContent = gameState.playerRoom;
   ui.killerRoom.textContent = gameState.killerRoom;
-  ui.exitState.textContent = gameState.collectedKeys.length >= totalKeys ? "Open" : "Locked";
+  ui.exitState.textContent =
+    gameState.collectedKeys.length >= totalKeys ? "Open" : "Locked";
 
   moveToken(ui.playerToken, gameState.playerRoom);
   moveToken(ui.killerToken, gameState.killerRoom);
