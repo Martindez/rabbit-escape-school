@@ -15,7 +15,8 @@ const characters = {
 
 function initMenu() {
   const savedCharacter = localStorage.getItem("stillInsaneCharacter") || "player.png";
-  const savedName = localStorage.getItem("stillInsaneCharacterName") || characters[savedCharacter];
+  const savedName = characters[savedCharacter] || "Alansius";
+localStorage.setItem("stillInsaneCharacterName", savedName);
 
   updateCharacterPreview(savedCharacter, savedName);
   updateMuteButton();
