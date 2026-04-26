@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     Exit: { top: 91, left: 50 }
   };
 
+  const churchKillerImage = "../assets/killer2.png";
   const secretWord = "MONSTER";
   const totalRelics = 6;
 
@@ -81,6 +82,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     playerToken: document.getElementById("playerToken"),
     killerToken: document.getElementById("killerToken"),
+    jumpscareKiller: document.querySelector(".jumpscare-killer"),
+
     flashOverlay: document.getElementById("flashOverlay"),
     jumpscareOverlay: document.getElementById("jumpscareOverlay"),
     mapBoard: document.querySelector(".map-board"),
@@ -121,6 +124,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("click", startAmbientMusic);
   document.addEventListener("touchstart", startAmbientMusic);
 
+  function isMuted() {
+    return localStorage.getItem("stillInsaneMuted") === "true";
+  }
+
   function setupRandomWordGame() {
     hiddenLetterIndex = Math.floor(Math.random() * secretWord.length);
     relicRooms = allChurchRelicRooms.filter((_, index) => index !== hiddenLetterIndex);
@@ -130,6 +137,24 @@ document.addEventListener("DOMContentLoaded", () => {
       const wordIndex = index >= hiddenLetterIndex ? index + 1 : index;
       relicLetters[room] = secretWord[wordIndex];
     });
+  }
+
+  function setChurchKillerArt() {
+    if (ui.killerToken) {
+      ui.killerToken.src = churchKillerImage;
+    }
+
+    if (ui.jumpscareKiller) {
+      ui.jumpscareKiller.src = churchKillerImage;
+    }
+  }
+
+  function loadSelectedCharacter() {
+    const character = localStorage.getItem("stillInsaneCharacter") || "player.png";
+
+    if (ui.playerToken) {
+      ui.playerToken.src = `../assets/${character}`;
+    }
   }
 
   function initAudio() {
@@ -144,8 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function startAmbientMusic() {
-    const muted = localStorage.getItem("rabbitEscapeMuted") === "true";
-    if (muted || !ui.ambientMusic) return;
+    if (isMuted() || !ui.ambientMusic) return;
 
     ui.ambientMusic.volume = 0.35;
     ui.ambientMusic.muted = false;
@@ -153,8 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function updateMusicState() {
-    const muted = localStorage.getItem("rabbitEscapeMuted") === "true";
-    if (muted || !gameState.gameStarted || gameState.exitChallengeStarted) return;
+    if (isMuted() || !gameState.gameStarted || gameState.exitChallengeStarted) return;
     if (!ui.ambientMusic || !ui.chaseMusic) return;
 
     if (isKillerNear()) {
@@ -180,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function playJumpscareSound() {
-    if (!ui.jumpscareSound) return;
+    if (!ui.jumpscareSound || isMuted()) return;
 
     ui.jumpscareSound.currentTime = 0;
     ui.jumpscareSound.volume = 0.85;
@@ -188,8 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function playLaughterCue() {
-    const muted = localStorage.getItem("rabbitEscapeMuted") === "true";
-    if (muted || !ui.laughterSound) return;
+    if (isMuted() || !ui.laughterSound) return;
 
     ui.laughterSound.pause();
     ui.laughterSound.currentTime = 0;
@@ -257,9 +279,10 @@ document.addEventListener("DOMContentLoaded", () => {
     killerTimer = null;
 
     setupRandomWordGame();
+    setChurchKillerArt();
+    loadSelectedCharacter();
     initAudio();
     createPlayerLight();
-    loadSelectedCharacter();
 
     playerMovedSinceLastKillerStep = false;
 
@@ -286,10 +309,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function startKillerTimer() {
     clearInterval(killerTimer);
 
-    let speed = 8000;
-    if (gameState.collectedRelics.length >= 2) speed = 6500;
-    if (gameState.collectedRelics.length >= 4) speed = 5200;
-    if (gameState.collectedRelics.length >= 5) speed = 4200;
+    let speed = 6000;
+    if (gameState.collectedRelics.length >= 2) speed = 5000;
+    if (gameState.collectedRelics.length >= 4) speed = 4000;
+    if (gameState.collectedRelics.length >= 5) speed = 3200;
 
     killerTimer = setInterval(() => {
       if (!gameState.gameStarted || gameState.exitChallengeStarted) return;
@@ -411,6 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function moveKillerRandom() {
     const options = rooms[gameState.killerRoom].filter((room) => room !== "Exit");
+
     if (options.length > 0) {
       gameState.killerRoom = options[Math.floor(Math.random() * options.length)];
     }
@@ -464,6 +488,7 @@ document.addEventListener("DOMContentLoaded", () => {
     exitTimeLeft = 5;
 
     if (ui.ambientMusic) ui.ambientMusic.pause();
+
     if (ui.chaseMusic) {
       ui.chaseMusic.volume = 0.6;
       ui.chaseMusic.play().catch(() => {});
@@ -637,13 +662,6 @@ document.addEventListener("DOMContentLoaded", () => {
       ui.jumpscareOverlay.classList.add("hidden");
     }, 900);
   }
-  function loadSelectedCharacter() {
-  const character = localStorage.getItem("stillInsaneCharacter") || "player.png";
-
-  if (ui.playerToken) {
-    ui.playerToken.src = `../assets/${character}`;
-  }
-}
 
   startGame();
 });
