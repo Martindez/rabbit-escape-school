@@ -10,7 +10,6 @@ body {
 
 body {
   min-height: 100vh;
-  min-height: 100dvh;
   background: #05080b;
   color: white;
   font-family: Arial, Helvetica, sans-serif;
@@ -19,7 +18,8 @@ body {
 }
 
 .app {
-  width: min(1200px, 100%);
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 10px;
 }
@@ -31,17 +31,17 @@ body {
 
 .topbar h1 {
   margin: 6px 0 2px;
-  font-size: clamp(1.6rem, 5vw, 2.3rem);
+  font-size: 2rem;
 }
 
 .topbar p {
   margin: 0;
-  color: #ccc;
+  color: #cccccc;
 }
 
 .panel {
   background: #141414;
-  border: 1px solid #333;
+  border: 1px solid #333333;
   border-radius: 16px;
   padding: 12px;
   margin-bottom: 10px;
@@ -74,7 +74,7 @@ body {
   margin: 8px 0 0;
   color: #ff3333;
   text-align: center;
-  font-size: clamp(2rem, 8vw, 4rem);
+  font-size: 3rem;
   font-weight: 900;
   text-shadow: 0 0 18px red;
   animation: timerPulse 0.7s infinite alternate;
@@ -97,8 +97,6 @@ body {
   background: #ff2b33;
 }
 
-/* FIXED SHIP BOARD */
-
 .map-board {
   position: relative;
   width: 100%;
@@ -107,12 +105,9 @@ body {
   aspect-ratio: 16 / 10;
   overflow: hidden;
   border-radius: 18px;
-  background: #000;
+  background: #000000;
   touch-action: manipulation;
-
-  box-shadow:
-    0 0 25px rgba(0, 0, 0, 0.9),
-    0 0 35px rgba(0, 80, 120, 0.22);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.9), 0 0 35px rgba(0, 80, 120, 0.22);
 }
 
 .map-board::after {
@@ -121,9 +116,7 @@ body {
   inset: 0;
   z-index: 3;
   pointer-events: none;
-
-  background:
-    radial-gradient(circle at center, transparent 48%, rgba(0, 0, 0, 0.48)),
+  background: radial-gradient(circle at center, transparent 48%, rgba(0, 0, 0, 0.48)),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.25));
 }
 
@@ -132,23 +125,19 @@ body {
   height: 100%;
   object-fit: contain;
   display: block;
-  background: #000;
+  background: #000000;
   pointer-events: none;
 }
-
-/* HOTSPOTS */
 
 .room-hotspot {
   position: absolute;
   border: 0;
-  background: transparent !important;
-  outline: none !important;
+  background: transparent;
+  outline: none;
   cursor: pointer;
   z-index: 20;
   touch-action: manipulation;
 }
-
-/* BETTER ROOM ALIGNMENT */
 
 .captain-bridge {
   top: 2%;
@@ -227,8 +216,6 @@ body {
   height: 20%;
 }
 
-/* ROPE */
-
 .rope-layer {
   position: absolute;
   inset: 0;
@@ -238,8 +225,8 @@ body {
 
 .rope {
   position: absolute;
-  width: clamp(22px, 3vw, 34px);
-  height: clamp(22px, 3vw, 34px);
+  width: 30px;
+  height: 30px;
   transform: translate(-50%, -50%);
 }
 
@@ -249,16 +236,10 @@ body {
   inset: 0;
   display: grid;
   place-items: center;
-  font-size: clamp(20px, 3vw, 30px);
-
-  filter:
-    drop-shadow(0 0 8px rgba(255, 210, 100, 0.9))
-    drop-shadow(0 8px 8px black);
-
+  font-size: 26px;
+  filter: drop-shadow(0 0 8px rgba(255, 210, 100, 0.9)) drop-shadow(0 8px 8px black);
   animation: ropeFloat 1.4s infinite alternate;
 }
-
-/* TOKENS */
 
 .token {
   position: absolute;
@@ -267,39 +248,22 @@ body {
 }
 
 .player-token {
-  width: clamp(48px, 6vw, 76px);
-  height: clamp(48px, 6vw, 76px);
-
+  width: 64px;
+  height: 64px;
   transform: translate(-50%, -78%);
   z-index: 8;
-
-  filter:
-    drop-shadow(0 0 10px rgba(255, 235, 150, 0.9))
-    drop-shadow(0 10px 10px black);
-
-  transition:
-    top 0.45s ease,
-    left 0.45s ease;
+  filter: drop-shadow(0 0 10px rgba(255, 235, 150, 0.9)) drop-shadow(0 10px 10px black);
+  transition: top 0.45s ease, left 0.45s ease;
 }
 
 .killer-token {
-  width: clamp(62px, 7vw, 96px);
-  height: clamp(62px, 7vw, 96px);
-
+  width: 82px;
+  height: 82px;
   transform: translate(-50%, -82%);
   z-index: 9;
-
   opacity: 0;
-
-  filter:
-    drop-shadow(0 0 18px rgba(80, 180, 255, 0.85))
-    drop-shadow(0 12px 12px black);
-
-  transition:
-    top 0.45s ease,
-    left 0.45s ease,
-    opacity 0.35s ease,
-    filter 0.35s ease;
+  filter: drop-shadow(0 0 18px rgba(80, 180, 255, 0.85)) drop-shadow(0 12px 12px black);
+  transition: top 0.45s ease, left 0.45s ease, opacity 0.35s ease, filter 0.35s ease;
 }
 
 .visible-captain {
@@ -315,8 +279,6 @@ body {
   animation: movePop 0.35s ease;
 }
 
-/* FLASH */
-
 .flash-overlay {
   position: fixed;
   inset: 0;
@@ -329,8 +291,6 @@ body {
 .flash-overlay.active {
   animation: flash 0.35s ease;
 }
-
-/* ANIMATIONS */
 
 @keyframes ropeFloat {
   from {
@@ -345,42 +305,40 @@ body {
 @keyframes captainPulse {
   from {
     opacity: 0.35;
-
-    filter:
-      blur(4px)
-      drop-shadow(0 0 8px rgba(80, 180, 255, 0.5));
+    filter: blur(4px) drop-shadow(0 0 8px rgba(80, 180, 255, 0.5));
   }
 
   to {
     opacity: 0.9;
-
-    filter:
-      blur(0)
-      drop-shadow(0 0 22px rgba(80, 180, 255, 0.95));
+    filter: blur(0) drop-shadow(0 0 22px rgba(80, 180, 255, 0.95));
   }
 }
 
 @keyframes movePop {
   0% {
-    scale: 1;
+    transform: translate(-50%, -78%) scale(1);
   }
 
   50% {
-    scale: 1.1;
+    transform: translate(-50%, -78%) scale(1.1);
   }
 
   100% {
-    scale: 1;
+    transform: translate(-50%, -78%) scale(1);
   }
 }
 
 @keyframes flash {
-  0%,100% {
+  0% {
     opacity: 0;
   }
 
   45% {
     opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
   }
 }
 
@@ -393,8 +351,6 @@ body {
     transform: scale(1.08);
   }
 }
-
-/* MOBILE */
 
 @media (max-width: 700px) {
   .app {
@@ -410,17 +366,22 @@ body {
     padding: 8px;
   }
 
-  .map-board {
-    aspect-ratio: 9 / 14;
-  }
-
   .player-token {
-    width: clamp(42px, 11vw, 68px);
-    height: clamp(42px, 11vw, 68px);
+    width: 48px;
+    height: 48px;
   }
 
   .killer-token {
-    width: clamp(52px, 13vw, 82px);
-    height: clamp(52px, 13vw, 82px);
+    width: 62px;
+    height: 62px;
+  }
+
+  .rope {
+    width: 24px;
+    height: 24px;
+  }
+
+  .rope::before {
+    font-size: 22px;
   }
 }
