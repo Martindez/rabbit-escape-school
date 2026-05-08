@@ -3,12 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-
   <title>Still Insane - The Last Voyage</title>
-
-  <link rel="apple-touch-icon" href="../assets/Icon.png" />
-  <link rel="icon" href="../assets/Icon.png" />
-  <link rel="stylesheet" href="./style.css" />
+  <link rel="stylesheet" href="./style.css?v=10" />
 </head>
 
 <body>
@@ -37,36 +33,35 @@
 
     <section id="gameWrap" class="panel">
       <div class="map-board">
-        <img src="./assets/map.jpg" alt="Ship map" class="map-image" draggable="false" />
+        <img src="./assets/map.jpg?v=10" alt="Ship map" class="map-image" draggable="false" />
 
-        <button class="room-hotspot captain-bridge" data-room="Captain Bridge" type="button" aria-label="Captain Bridge"></button>
-        <button class="room-hotspot restaurant" data-room="Restaurant" type="button" aria-label="Restaurant"></button>
-        <button class="room-hotspot hallway" data-room="Hallway" type="button" aria-label="Hallway"></button>
-        <button class="room-hotspot crew-quarters" data-room="Crew Quarters" type="button" aria-label="Crew Quarters"></button>
-        <button class="room-hotspot rooms-left" data-room="Rooms Left" type="button" aria-label="Rooms Left"></button>
-        <button class="room-hotspot grand-staircase" data-room="Grand Staircase" type="button" aria-label="Grand Staircase"></button>
-        <button class="room-hotspot rooms-right" data-room="Rooms Right" type="button" aria-label="Rooms Right"></button>
-        <button class="room-hotspot lounge" data-room="Lounge" type="button" aria-label="Lounge"></button>
-        <button class="room-hotspot balcony-deck" data-room="Balcony Deck" type="button" aria-label="Balcony Deck"></button>
-        <button class="room-hotspot left-lifeboat" data-room="Left Lifeboat" type="button" aria-label="Left Lifeboat"></button>
-        <button class="room-hotspot right-lifeboat" data-room="Right Lifeboat" type="button" aria-label="Right Lifeboat"></button>
+        <button class="room-hotspot captain-bridge" data-room="Captain Bridge" type="button"></button>
+        <button class="room-hotspot restaurant" data-room="Restaurant" type="button"></button>
+        <button class="room-hotspot hallway" data-room="Hallway" type="button"></button>
+        <button class="room-hotspot crew-quarters" data-room="Crew Quarters" type="button"></button>
+        <button class="room-hotspot rooms-left" data-room="Rooms Left" type="button"></button>
+        <button class="room-hotspot grand-staircase" data-room="Grand Staircase" type="button"></button>
+        <button class="room-hotspot rooms-right" data-room="Rooms Right" type="button"></button>
+        <button class="room-hotspot lounge" data-room="Lounge" type="button"></button>
+        <button class="room-hotspot balcony-deck" data-room="Balcony Deck" type="button"></button>
+        <button class="room-hotspot left-lifeboat" data-room="Left Lifeboat" type="button"></button>
+        <button class="room-hotspot right-lifeboat" data-room="Right Lifeboat" type="button"></button>
 
         <div id="ropeLayer" class="rope-layer"></div>
 
         <img id="playerToken" class="token player-token" src="../assets/player.png" alt="Player" draggable="false" />
-        <img id="killerToken" class="token killer-token hidden-captain" src="../assets/killer3.png" alt="Ghost Captain" draggable="false" />
+        <img id="killerToken" class="token killer-token hidden-captain" src="../assets/killer3.png" alt="Captain" draggable="false" />
       </div>
     </section>
 
     <section id="endScreen" class="panel screen hidden">
       <h2 id="endTitle">You Escaped!</h2>
       <p id="endText">You fixed the lifeboat and survived the ship.</p>
-
       <button id="restartBtn" class="main-btn" type="button">Play Again</button>
       <button id="menuBtn" class="main-btn" type="button">Main Menu</button>
     </section>
   </main>
 
-  <script src="./script.js"></script>
+  <script src="./script.js?v=10"></script>
 </body>
 </html>

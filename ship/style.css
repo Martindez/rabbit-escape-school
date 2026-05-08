@@ -92,12 +92,6 @@ body {
   cursor: pointer;
 }
 
-.main-btn:hover {
-  transform: scale(1.03);
-  background: #ff2b33;
-}
-
-/* NEW WIDE SHIP MAP */
 .map-board {
   position: relative;
   width: 100%;
@@ -117,8 +111,7 @@ body {
   inset: 0;
   z-index: 3;
   pointer-events: none;
-  background: radial-gradient(circle at center, transparent 50%, rgba(0, 0, 0, 0.45)),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.22));
+  background: radial-gradient(circle at center, transparent 50%, rgba(0, 0, 0, 0.45));
 }
 
 .map-image {
@@ -133,102 +126,37 @@ body {
 .room-hotspot {
   position: absolute;
   border: 0;
-  background: transparent;
+  background: rgba(255, 255, 255, 0);
   outline: none;
   cursor: pointer;
-  z-index: 20;
+  z-index: 30;
   touch-action: manipulation;
 }
 
-/* HITBOXES FOR NEW MAP */
-.captain-bridge {
-  top: 5%;
-  left: 36%;
-  width: 28%;
-  height: 16%;
-}
-
-.restaurant {
-  top: 25%;
-  left: 22%;
-  width: 20%;
-  height: 18%;
-}
-
-.hallway {
-  top: 22%;
-  left: 43%;
-  width: 14%;
-  height: 23%;
-}
-
-.crew-quarters {
-  top: 25%;
-  left: 58%;
-  width: 20%;
-  height: 18%;
-}
-
-.rooms-left {
-  top: 46%;
-  left: 20%;
-  width: 22%;
-  height: 18%;
-}
-
-.grand-staircase {
-  top: 44%;
-  left: 42%;
-  width: 16%;
-  height: 20%;
-}
-
-.rooms-right {
-  top: 46%;
-  left: 58%;
-  width: 22%;
-  height: 18%;
-}
-
-.lounge {
-  top: 66%;
-  left: 34%;
-  width: 32%;
-  height: 16%;
-}
-
-.balcony-deck {
-  top: 84%;
-  left: 35%;
-  width: 30%;
-  height: 13%;
-}
-
-.left-lifeboat {
-  top: 68%;
-  left: 4%;
-  width: 18%;
-  height: 24%;
-}
-
-.right-lifeboat {
-  top: 68%;
-  left: 78%;
-  width: 18%;
-  height: 24%;
-}
+/* HITBOXES */
+.captain-bridge { top: 5%; left: 35%; width: 30%; height: 17%; }
+.restaurant { top: 25%; left: 22%; width: 20%; height: 18%; }
+.hallway { top: 22%; left: 43%; width: 14%; height: 24%; }
+.crew-quarters { top: 25%; left: 58%; width: 20%; height: 18%; }
+.rooms-left { top: 46%; left: 20%; width: 22%; height: 18%; }
+.grand-staircase { top: 44%; left: 42%; width: 16%; height: 20%; }
+.rooms-right { top: 46%; left: 58%; width: 22%; height: 18%; }
+.lounge { top: 66%; left: 34%; width: 32%; height: 16%; }
+.balcony-deck { top: 84%; left: 35%; width: 30%; height: 13%; }
+.left-lifeboat { top: 67%; left: 4%; width: 18%; height: 27%; }
+.right-lifeboat { top: 67%; left: 78%; width: 18%; height: 27%; }
 
 .rope-layer {
   position: absolute;
   inset: 0;
-  z-index: 6;
+  z-index: 8;
   pointer-events: none;
 }
 
 .rope {
   position: absolute;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   transform: translate(-50%, -50%);
 }
 
@@ -238,7 +166,7 @@ body {
   inset: 0;
   display: grid;
   place-items: center;
-  font-size: 26px;
+  font-size: 28px;
   filter: drop-shadow(0 0 8px rgba(255, 210, 100, 0.9)) drop-shadow(0 8px 8px black);
   animation: ropeFloat 1.4s infinite alternate;
 }
@@ -253,7 +181,7 @@ body {
   width: 60px;
   height: 60px;
   transform: translate(-50%, -78%);
-  z-index: 8;
+  z-index: 15;
   filter: drop-shadow(0 0 10px rgba(255, 235, 150, 0.9)) drop-shadow(0 10px 10px black);
   transition: top 0.45s ease, left 0.45s ease;
 }
@@ -262,7 +190,7 @@ body {
   width: 78px;
   height: 78px;
   transform: translate(-50%, -82%);
-  z-index: 9;
+  z-index: 16;
   opacity: 0;
   filter: drop-shadow(0 0 18px rgba(80, 180, 255, 0.85)) drop-shadow(0 12px 12px black);
   transition: top 0.45s ease, left 0.45s ease, opacity 0.35s ease, filter 0.35s ease;
@@ -287,7 +215,7 @@ body {
   background: rgba(60, 160, 255, 0.3);
   pointer-events: none;
   opacity: 0;
-  z-index: 30;
+  z-index: 50;
 }
 
 .flash-overlay.active {
@@ -295,13 +223,8 @@ body {
 }
 
 @keyframes ropeFloat {
-  from {
-    transform: translateY(0) scale(0.95);
-  }
-
-  to {
-    transform: translateY(-5px) scale(1.08);
-  }
+  from { transform: translateY(0) scale(0.95); }
+  to { transform: translateY(-5px) scale(1.08); }
 }
 
 @keyframes captainPulse {
@@ -317,41 +240,20 @@ body {
 }
 
 @keyframes movePop {
-  0% {
-    transform: translate(-50%, -78%) scale(1);
-  }
-
-  50% {
-    transform: translate(-50%, -78%) scale(1.1);
-  }
-
-  100% {
-    transform: translate(-50%, -78%) scale(1);
-  }
+  0% { transform: translate(-50%, -78%) scale(1); }
+  50% { transform: translate(-50%, -78%) scale(1.1); }
+  100% { transform: translate(-50%, -78%) scale(1); }
 }
 
 @keyframes flash {
-  0% {
-    opacity: 0;
-  }
-
-  45% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
+  0% { opacity: 0; }
+  45% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 @keyframes timerPulse {
-  from {
-    transform: scale(1);
-  }
-
-  to {
-    transform: scale(1.08);
-  }
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
 }
 
 @media (max-width: 700px) {

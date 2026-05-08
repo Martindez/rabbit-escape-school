@@ -1,63 +1,61 @@
 document.addEventListener("DOMContentLoaded", function () {
   const rooms = {
     "Captain Bridge": ["Hallway"],
-    Restaurant: ["Hallway", "Grand Staircase"],
+    "Restaurant": ["Hallway", "Grand Staircase"],
     "Crew Quarters": ["Hallway", "Grand Staircase"],
-    Hallway: ["Captain Bridge", "Restaurant", "Crew Quarters", "Grand Staircase"],
+    "Hallway": ["Captain Bridge", "Restaurant", "Crew Quarters", "Grand Staircase"],
     "Grand Staircase": ["Hallway", "Restaurant", "Crew Quarters", "Rooms Left", "Rooms Right", "Lounge"],
     "Rooms Left": ["Grand Staircase", "Lounge"],
     "Rooms Right": ["Grand Staircase", "Lounge"],
-    Lounge: ["Rooms Left", "Rooms Right", "Grand Staircase", "Balcony Deck"],
+    "Lounge": ["Rooms Left", "Rooms Right", "Grand Staircase", "Balcony Deck"],
     "Balcony Deck": ["Lounge", "Left Lifeboat", "Right Lifeboat"],
     "Left Lifeboat": ["Balcony Deck"],
     "Right Lifeboat": ["Balcony Deck"]
   };
 
   const roomPositions = {
-    "Captain Bridge": { top: 13, left: 50 },
-    Restaurant: { top: 34, left: 32 },
-    Hallway: { top: 34, left: 50 },
-    "Crew Quarters": { top: 34, left: 68 },
-    "Rooms Left": { top: 55, left: 31 },
-    "Grand Staircase": { top: 54, left: 50 },
-    "Rooms Right": { top: 55, left: 69 },
-    Lounge: { top: 74, left: 50 },
-    "Balcony Deck": { top: 90, left: 50 },
-    "Left Lifeboat": { top: 83, left: 13 },
-    "Right Lifeboat": { top: 83, left: 87 }
+    "Captain Bridge": { top: 14, left: 50 },
+    "Restaurant": { top: 35, left: 33 },
+    "Hallway": { top: 35, left: 50 },
+    "Crew Quarters": { top: 35, left: 67 },
+    "Rooms Left": { top: 56, left: 31 },
+    "Grand Staircase": { top: 55, left: 50 },
+    "Rooms Right": { top: 56, left: 69 },
+    "Lounge": { top: 75, left: 50 },
+    "Balcony Deck": { top: 91, left: 50 },
+    "Left Lifeboat": { top: 84, left: 13 },
+    "Right Lifeboat": { top: 84, left: 87 }
   };
 
   const ropePositions = {
-    "Captain Bridge": { top: 15, left: 52 },
-    Restaurant: { top: 36, left: 33 },
-    Hallway: { top: 36, left: 50 },
-    "Crew Quarters": { top: 36, left: 68 },
+    "Captain Bridge": { top: 14, left: 53 },
+    "Restaurant": { top: 36, left: 33 },
+    "Crew Quarters": { top: 36, left: 67 },
     "Rooms Left": { top: 57, left: 32 },
     "Grand Staircase": { top: 56, left: 50 },
     "Rooms Right": { top: 57, left: 68 },
-    Lounge: { top: 76, left: 50 },
-    "Balcony Deck": { top: 91, left: 50 }
+    "Lounge": { top: 76, left: 50 }
   };
 
   const possibleRopeRooms = [
     "Captain Bridge",
-    Restaurant,
+    "Restaurant",
     "Crew Quarters",
     "Rooms Left",
     "Rooms Right",
     "Grand Staircase",
-    Lounge
+    "Lounge"
   ];
 
   const captainRooms = [
     "Captain Bridge",
-    Restaurant,
-    Hallway,
+    "Restaurant",
+    "Hallway",
     "Crew Quarters",
     "Rooms Left",
     "Grand Staircase",
     "Rooms Right",
-    Lounge,
+    "Lounge",
     "Balcony Deck"
   ];
 
@@ -102,18 +100,14 @@ document.addEventListener("DOMContentLoaded", function () {
     roomButtons: document.querySelectorAll(".room-hotspot")
   };
 
-  if (ui.restartBtn) {
-    ui.restartBtn.addEventListener("click", startGame);
-  }
+  ui.restartBtn.addEventListener("click", startGame);
 
-  if (ui.menuBtn) {
-    ui.menuBtn.addEventListener("click", function () {
-      stopMusic();
-      clearInterval(captainTimer);
-      clearInterval(escapeTimer);
-      window.location.href = "../";
-    });
-  }
+  ui.menuBtn.addEventListener("click", function () {
+    stopMusic();
+    clearInterval(captainTimer);
+    clearInterval(escapeTimer);
+    window.location.href = "../";
+  });
 
   ui.roomButtons.forEach(function (button) {
     button.addEventListener("click", function () {
@@ -139,17 +133,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function stopMusic() {
     if (!ui.ambientMusic) return;
-
     ui.ambientMusic.pause();
     ui.ambientMusic.currentTime = 0;
   }
 
   function loadSelectedCharacter() {
     const character = localStorage.getItem("stillInsaneCharacter") || "player.png";
-
-    if (ui.playerToken) {
-      ui.playerToken.src = "../assets/" + character;
-    }
+    ui.playerToken.src = "../assets/" + character;
   }
 
   function startGame() {
@@ -250,10 +240,6 @@ document.addEventListener("DOMContentLoaded", function () {
     ui.timerText.classList.remove("hidden");
     ui.timerText.textContent = escapeTimeLeft;
 
-    if (ui.ambientMusic) {
-      ui.ambientMusic.volume = 0.48;
-    }
-
     showMessage("Hull breach! Escape to a lifeboat now!");
 
     escapeTimer = setInterval(function () {
@@ -289,17 +275,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return room !== gameState.playerRoom;
     });
 
-    if (Math.random() < 0.25) {
-      const nearby = rooms[gameState.playerRoom] || [];
-      const nearbyOptions = nearby.filter(function (room) {
-        return captainRooms.includes(room);
-      });
-
-      if (nearbyOptions.length > 0) {
-        options = nearbyOptions;
-      }
-    }
-
     if (options.length === 0) {
       options = captainRooms;
     }
@@ -308,12 +283,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function updateCaptainVisibility() {
-    if (!ui.killerToken) return;
-
     const connectedRooms = rooms[gameState.playerRoom] || [];
-    const visible =
-      gameState.playerRoom === gameState.captainRoom ||
-      connectedRooms.includes(gameState.captainRoom);
+    const visible = gameState.playerRoom === gameState.captainRoom || connectedRooms.includes(gameState.captainRoom);
 
     if (visible) {
       ui.killerToken.classList.remove("hidden-captain");
@@ -397,7 +368,7 @@ document.addEventListener("DOMContentLoaded", function () {
     gameState.ropeRooms.forEach(function (room) {
       if (gameState.collectedRopes.includes(room)) return;
 
-      const pos = ropePositions[room] || roomPositions[room];
+      const pos = ropePositions[room];
       const rope = document.createElement("div");
 
       rope.className = "rope";
@@ -409,8 +380,6 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function moveToken(token, room) {
-    if (!token || !roomPositions[room]) return;
-
     const pos = roomPositions[room];
 
     token.style.top = pos.top + "%";
